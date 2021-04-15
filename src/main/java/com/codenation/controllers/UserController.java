@@ -1,5 +1,6 @@
 package com.codenation.controllers;
 
+import com.codenation.dtos.UserDTO;
 import com.codenation.services.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -8,8 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.codenation.models.User;
 import org.springframework.http.HttpStatus;
-
+import org.modelmapper.ModelMapper;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")
@@ -19,6 +21,12 @@ import java.util.List;
 public class UserController {
 
     final private UserServiceImpl userService;
+
+    private ModelMapper modelMapper;
+
+    private UserDTO toUserDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
+    }
 
     @GetMapping("/teste")
     @ApiOperation(value = "faz um teste")
@@ -37,8 +45,10 @@ public class UserController {
         }
     }
     
-    @PostMapping("/all")
-    public ResponseEntity<List<User>> getAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
+    @GetMapping("/all")
+    @ApiOperation(value = "Retorna todos os usuários")
+    public ResponseEntity<List<UserDTO>> getAll(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll()
+            .stream().map(this::toUserDTO).collect(Collectors.toList()));
     }
 }

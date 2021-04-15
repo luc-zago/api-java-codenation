@@ -5,6 +5,8 @@ import com.codenation.repositories.EventRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class EventServiceImpl implements EventService {
@@ -14,5 +16,10 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event save(Event object) {
         return this.eventRepository.save(object);
+    }
+
+    @Override
+    public List<Event> getAll() {
+        return eventRepository.findAll();
     }
 }
