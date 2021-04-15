@@ -1,6 +1,6 @@
 package com.codenation.controllers;
 
-import com.codenation.services.EventService;
+import com.codenation.services.EventServiceImpl;
 import io.swagger.annotations.Api;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,5 +14,5 @@ import org.springframework.web.bind.annotation.RestController;
 @CrossOrigin(origins = "*")
 public class EventController {
 
-    final private EventService eventService;
+    final private EventServiceImpl eventService;
 }
