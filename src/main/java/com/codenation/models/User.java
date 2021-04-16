@@ -3,6 +3,7 @@ package com.codenation.models;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class User {
     private Long id;
 
     @NotEmpty
+    @Email
     @Column(nullable = false, length = 50)
     private String email;
 

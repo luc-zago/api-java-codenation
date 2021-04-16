@@ -16,7 +16,7 @@ public class LoginController {
     private final LoginServiceImpl loginService;
 
     @PostMapping
-    public User login(@RequestBody String login) {
-        return loginService.findByLogin(login);
+    public User login(@RequestBody String email) {
+        return loginService.findByEmail(email);
     }
 }
