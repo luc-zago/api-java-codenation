@@ -29,7 +29,7 @@ public class LevelController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo tipo de level")
-    public ResponseEntity<Level> register(Level level) {
+    public ResponseEntity<Level> register(@RequestBody Level level) {
         Level levelCreated = levelService.save(level);
         if (levelCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

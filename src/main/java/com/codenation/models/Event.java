@@ -1,16 +1,18 @@
 package com.codenation.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
 @Data
 @Table(name = "events")
 public class Event {
@@ -18,23 +20,24 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @NotBlank
+    @NotEmpty
     @Column(nullable = false)
     private String description;
 
-    @NotBlank
+    @NotEmpty
     @Column(nullable = false)
     private String log;
 
-    @NotBlank
+    @NotEmpty
     @Column(nullable = false, length = 100)
     private String origin;
 
-    @NotBlank
+    @NotNull
     @Column(nullable = false)
-    private LocalDateTime date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    private LocalDate date;
 
-    @NotBlank
+    @NotNull
     @Column(nullable = false)
     private Integer quantity;
 

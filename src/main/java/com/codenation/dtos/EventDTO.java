@@ -2,7 +2,7 @@ package com.codenation.dtos;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Data
 public class EventDTO {
@@ -10,7 +10,7 @@ public class EventDTO {
     private Long id;
     private String description;
     private String origin;
-    private LocalDateTime date;
+    private LocalDate date;
     private Integer quantity;
 
 }

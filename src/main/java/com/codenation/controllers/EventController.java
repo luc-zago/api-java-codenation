@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class EventController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
-    public ResponseEntity<Event> register(Event event) {
+    public ResponseEntity<Event> register(@RequestBody @Valid Event event) {
         Event eventCreated = eventService.save(event);
         if (eventCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -45,5 +46,11 @@ public class EventController {
     public ResponseEntity<List<EventDTO>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(eventService.getAll()
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/teste")
+    @ApiOperation(value = "Retorna todos os eventos")
+    public ResponseEntity<List<Event>> getAllTest(){
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.getAll();
     }
 }
