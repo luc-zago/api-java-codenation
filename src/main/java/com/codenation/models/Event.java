@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.Data;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -29,21 +30,22 @@ public class Event {
     private String log;
 
     @NotEmpty
+    @Email
     @Column(nullable = false, length = 100)
     private String origin;
 
-    @NotNull
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDate date;
 
-    @NotNull
     @Column(nullable = false)
     private Integer quantity;
 
+    @NotNull
     @ManyToOne
     private User user;
 
+    @NotNull
     @ManyToOne
     private Level level;
 

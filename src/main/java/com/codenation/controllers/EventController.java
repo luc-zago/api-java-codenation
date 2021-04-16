@@ -48,9 +48,4 @@ public class EventController {
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
 
-    @GetMapping("/teste")
-    @ApiOperation(value = "Retorna todos os eventos")
-    public ResponseEntity<List<Event>> getAllTest(){
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.getAll();
-    }
 }
