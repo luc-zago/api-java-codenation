@@ -22,8 +22,8 @@ public class User {
     @NotEmpty
     @Column(nullable = false, length = 100)
     private String password;
-
+/*
     @OneToMany
-    private List<Event> eventList;
+    private List<Event> eventList;*/
 
 }

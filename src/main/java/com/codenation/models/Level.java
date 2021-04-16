@@ -18,8 +18,8 @@ public class Level {
     @NotEmpty
     @Column(nullable = false, length = 10)
     private String description;
-
+/*
     @OneToMany
-    private List<Event> eventList;
+    private List<Event> eventList; */
 
 }
