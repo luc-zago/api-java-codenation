@@ -17,7 +17,7 @@ public class User {
 
     @NotEmpty
     @Column(nullable = false, length = 50)
-    private String login;
+    private String email;
 
     @NotEmpty
     @Column(nullable = false, length = 100)
