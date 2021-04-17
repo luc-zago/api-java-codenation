@@ -44,10 +44,10 @@ public class UserController {
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
     public ResponseEntity<User> register(@RequestBody @Valid User user, Errors errors) {
-        if (errors.hasErrors()) {
+        /*if (errors.hasErrors()) {
             System.out.println(errors.getGlobalError().getDefaultMessage());
             return ResponseEntity.badRequest().body(null);
-        }
+        }*/
         User userCreated = userService.save(user);
         if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -64,10 +64,12 @@ public class UserController {
     }
 
     @ExceptionHandler
-    public ResponseEntity<CustomizedExceptionHandlerResponse> handleException (NullPointerException exception) {
+    public ResponseEntity<CustomizedExceptionHandlerResponse> handleException (MethodArgumentNotValidException exception) {
         LocalDateTime time = LocalDateTime.now();
         int code = HttpStatus.BAD_REQUEST.value();
-        String message = exception.getLocalizedMessage();
+        String message = exception.getMessage();
+        String message2 = exception.getGlobalError().getDefaultMessage();
+        System.out.println(message2);
         CustomizedExceptionHandlerResponse error = new CustomizedExceptionHandlerResponse(code, message, time);
         return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, HttpStatus.BAD_REQUEST);
     }

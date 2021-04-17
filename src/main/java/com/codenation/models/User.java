@@ -18,11 +18,11 @@ public class User {
 
     @NotEmpty(message = "O campo 'email' é obrigatório")
     @Email(message = "O campo 'email' precisa ter um formato de email válido")
-    @Column(nullable = false, length = 50)
+    @Column(length = 50)
     private String email;
 
     @NotEmpty(message = "O campo 'senha' é obrigatório")
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String password;
 /*
     @OneToMany
