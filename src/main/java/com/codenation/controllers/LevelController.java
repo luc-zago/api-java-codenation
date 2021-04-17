@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -29,7 +30,7 @@ public class LevelController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo tipo de level")
-    public ResponseEntity<Level> register(@RequestBody Level level) {
+    public ResponseEntity<Level> register(@RequestBody @Valid Level level) {
         Level levelCreated = levelService.save(level);
         if (levelCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

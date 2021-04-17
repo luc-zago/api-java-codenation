@@ -16,15 +16,15 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @NotEmpty
+    @NotEmpty(message = "O campo 'descrição' é obrigatório")
     @Column(nullable = false)
     private String description;
 
-    @NotEmpty
+    @NotEmpty(message = "O campo 'log' é obrigatório")
     @Column(nullable = false)
     private String log;
 
-    @NotEmpty
+    @NotEmpty(message = "O campo 'origem' é obrigatório")
     @Column(nullable = false, length = 100)
     private String origin;
 
@@ -35,11 +35,11 @@ public class Event {
     @Column(nullable = false)
     private Integer quantity;
 
-    @NotNull
+    @NotNull(message = "O campo 'usuário' é obrigatório")
     @ManyToOne
     private User user;
 
-    @NotNull
+    @NotNull(message = "O campo 'level' é obrigatório")
     @ManyToOne
     private Level level;
 

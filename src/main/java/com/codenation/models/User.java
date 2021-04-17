@@ -16,12 +16,12 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotEmpty
-    @Email
+    @NotEmpty(message = "O campo 'email' é obrigatório")
+    @Email(message = "O campo 'email' precisa ter um formato de email válido")
     @Column(nullable = false, length = 50)
     private String email;
 
-    @NotEmpty
+    @NotEmpty(message = "O campo 'senha' é obrigatório")
     @Column(nullable = false, length = 100)
     private String password;
 /*

@@ -14,7 +14,7 @@ public class Level {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "O campo 'descrição' é obrigatório")
     @Column(nullable = false, length = 10)
     private String description;
 /*
