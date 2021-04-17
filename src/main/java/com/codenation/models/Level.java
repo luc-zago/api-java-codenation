@@ -15,7 +15,7 @@ public class Level {
     private Long id;
 
     @NotEmpty(message = "O campo 'descrição' é obrigatório")
-    @Column(nullable = false, length = 10)
+    @Column(length = 10)
     private String description;
 /*
     @OneToMany

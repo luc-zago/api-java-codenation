@@ -16,19 +16,18 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
+    
     @NotEmpty(message = "O campo 'descrição' é obrigatório")
-    @Column(nullable = false)
     private String description;
 
     @NotEmpty(message = "O campo 'log' é obrigatório")
-    @Column(nullable = false)
     private String log;
 
     @NotEmpty(message = "O campo 'origem' é obrigatório")
-    @Column(nullable = false, length = 100)
+    @Column(length = 100)
     private String origin;
 
-    @Column(nullable = false)
+    @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDate date;
 
