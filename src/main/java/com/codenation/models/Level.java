@@ -19,7 +19,4 @@ public class Level {
     @Column(length = 10)
     private String description;
 
-    @OneToMany(mappedBy = "level")
-    private List<Event> events;
-
 }

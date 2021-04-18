@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,18 +24,14 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event save(Event object) {
         Long userId = object.getUser().getId();
-        System.out.println(userId);
         Long levelId = object.getLevel().getId();
-        System.out.println(levelId);
         Optional<User> user = this.userRepository.findById(userId);
-        System.out.println(user.get().getEmail());
         Optional<Level> level = this.levelRepository.findById(levelId);
-        System.out.println(level.get().getDescription());
         if (!user.isPresent()){
-            throw new NullPointerException("Usuário não encontrado");
+            throw new NoSuchElementException("Usuário não encontrado");
         }
         if (!level.isPresent()){
-            throw new NullPointerException("Level não encontrado");
+            throw new NoSuchElementException("Level não encontrado");
         }
         object.setUser(user.get());
         object.setLevel(level.get());
