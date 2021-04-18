@@ -23,9 +23,13 @@ public class EventServiceImpl implements EventService {
     @Override
     public Event save(Event object) {
         Long userId = object.getUser().getId();
+        System.out.println(userId);
         Long levelId = object.getLevel().getId();
+        System.out.println(levelId);
         Optional<User> user = this.userRepository.findById(userId);
+        System.out.println(user.get().getEmail());
         Optional<Level> level = this.levelRepository.findById(levelId);
+        System.out.println(level.get().getDescription());
         if (!user.isPresent()){
             throw new NullPointerException("Usuário não encontrado");
         }

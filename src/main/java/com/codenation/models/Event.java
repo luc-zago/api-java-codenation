@@ -40,6 +40,7 @@ public class Event {
 
     @NotNull(message = "O campo 'level' é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "levels_id")
     private Level level;
 
     @JsonProperty("user")

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Entity
 @Data
@@ -17,5 +18,8 @@ public class Level {
     @NotEmpty(message = "O campo 'descrição' é obrigatório")
     @Column(length = 10)
     private String description;
+
+    @OneToMany(mappedBy = "level")
+    private List<Event> events;
 
 }
