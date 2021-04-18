@@ -12,10 +12,19 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<CustomizedExceptionHandlerResponse> handleException (MethodArgumentNotValidException exception) {
+    public ResponseEntity<CustomizedExceptionHandlerResponse> handleArgumentNotValidException(MethodArgumentNotValidException exception) {
         LocalDateTime time = LocalDateTime.now();
         int code = HttpStatus.BAD_REQUEST.value();
         String message = exception.getFieldError().getDefaultMessage();
+        CustomizedExceptionHandlerResponse error = new CustomizedExceptionHandlerResponse(code, message, time);
+        return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<CustomizedExceptionHandlerResponse> handleNullPointerException(NullPointerException exception) {
+        LocalDateTime time = LocalDateTime.now();
+        int code = HttpStatus.BAD_REQUEST.value();
+        String message = exception.getMessage();
         CustomizedExceptionHandlerResponse error = new CustomizedExceptionHandlerResponse(code, message, time);
         return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, HttpStatus.BAD_REQUEST);
     }

@@ -4,8 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.util.List;
 
 @Entity
 @Data
@@ -24,8 +24,5 @@ public class User {
     @NotEmpty(message = "O campo 'senha' é obrigatório")
     @Column(length = 100)
     private String password;
-/*
-    @OneToMany
-    private List<Event> eventList;*/
 
 }

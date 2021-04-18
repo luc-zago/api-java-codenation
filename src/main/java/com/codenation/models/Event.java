@@ -1,6 +1,6 @@
 package com.codenation.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,7 +16,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    
+
     @NotEmpty(message = "O campo 'descrição' é obrigatório")
     private String description;
 
@@ -31,15 +31,27 @@ public class Event {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDate date;
 
-    @Column(nullable = false)
+    @NotNull(message = "O campo 'quantidade' é obrigatório")
     private Integer quantity;
 
     @NotNull(message = "O campo 'usuário' é obrigatório")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
 
     @NotNull(message = "O campo 'level' é obrigatório")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private Level level;
+
+    @JsonProperty("user")
+    private void UserConverter (Long userId) {
+        this.user = new User();
+        user.setId(userId);
+    }
+
+    @JsonProperty("level")
+    private void LevelConverter (Long levelId) {
+        this.level = new Level();
+        level.setId(levelId);
+    }
 
 }

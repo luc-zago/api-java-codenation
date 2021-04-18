@@ -17,8 +17,5 @@ public class Level {
     @NotEmpty(message = "O campo 'descrição' é obrigatório")
     @Column(length = 10)
     private String description;
-/*
-    @OneToMany
-    private List<Event> eventList; */
 
 }

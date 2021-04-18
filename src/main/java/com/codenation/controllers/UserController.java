@@ -41,9 +41,6 @@ public class UserController {
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
     public ResponseEntity<User> register(@RequestBody @Valid User user) {
-        /*if (errors.hasErrors()) {
-            //return ResponseEntity.badRequest().body(null);
-        } */
         User userCreated = userService.save(user);
         if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
