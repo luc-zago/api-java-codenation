@@ -44,9 +44,9 @@ public class Event {
     private Level level;
 
     @JsonProperty("user")
-    private void UserConverter (Long userId) {
+    private void UserConverter (String email) {
         this.user = new User();
-        user.setId(userId);
+        user.setEmail(email);
     }
 
     @JsonProperty("level")

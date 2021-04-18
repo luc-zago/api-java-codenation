@@ -33,7 +33,6 @@ public class EventController {
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
     public ResponseEntity<EventDTO> register(@RequestBody @Valid Event event) {
-        System.out.println(event);
         Event eventCreated = eventService.save(event);
         if (eventCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
