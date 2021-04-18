@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,8 +44,8 @@ public class EventController {
 
     @GetMapping("/all")
     @ApiOperation(value = "Retorna todos os eventos")
-    public ResponseEntity<List<EventDTO>> getAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.getAll()
+    public ResponseEntity<List<EventDTO>> getAll(Pageable pageable){
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.getAll(pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
 

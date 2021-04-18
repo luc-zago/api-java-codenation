@@ -7,11 +7,10 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -36,7 +35,7 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAll() {
-        return eventRepository.findAll();
+    public List<Event> getAll(Pageable pageable) {
+        return eventRepository.findAll(pageable).getContent();
     }
 }
