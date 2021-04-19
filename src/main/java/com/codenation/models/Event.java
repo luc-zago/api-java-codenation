@@ -1,16 +1,14 @@
 package com.codenation.models;
 
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
 @Data
 @Table(name = "events")
 public class Event {
@@ -18,30 +16,43 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @NotBlank
-    @Column(nullable = false)
+
+    @NotEmpty(message = "O campo 'descrição' é obrigatório")
     private String description;
 
-    @NotBlank
-    @Column(nullable = false)
+    @NotEmpty(message = "O campo 'log' é obrigatório")
     private String log;
 
-    @NotBlank
-    @Column(nullable = false, length = 100)
+    @NotEmpty(message = "O campo 'origem' é obrigatório")
+    @Column(length = 100)
     private String origin;
 
-    @NotBlank
-    @Column(nullable = false)
-    private LocalDateTime date;
+    @NotNull(message = "O campo 'data' é obrigatório")
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private LocalDate date;
 
-    @NotBlank
-    @Column(nullable = false)
+    @NotNull(message = "O campo 'quantidade' é obrigatório")
     private Integer quantity;
 
-    @ManyToOne
+    @NotNull(message = "O campo 'usuário' é obrigatório")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
 
-    @ManyToOne
+    @NotNull(message = "O campo 'level' é obrigatório")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "levels_id")
     private Level level;
+
+    @JsonProperty("user")
+    private void UserConverter (String email) {
+        this.user = new User();
+        user.setEmail(email);
+    }
+
+    @JsonProperty("level")
+    private void LevelConverter (Long levelId) {
+        this.level = new Level();
+        level.setId(levelId);
+    }
 
 }

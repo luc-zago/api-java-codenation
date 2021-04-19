@@ -1,16 +1,13 @@
 package com.codenation.models;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import java.util.List;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Getter
-@Setter
 @Data
 @Table(name = "users")
 public class User {
@@ -19,15 +16,13 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotBlank
-    @Column(nullable = false, length = 50)
-    private String login;
+    @NotEmpty(message = "O campo 'email' é obrigatório")
+    @Email(message = "O campo 'email' precisa ter um formato de email válido")
+    @Column(length = 50)
+    private String email;
 
-    @NotBlank
-    @Column(nullable = false, length = 100)
+    @NotEmpty(message = "O campo 'senha' é obrigatório")
+    @Column(length = 100)
     private String password;
-
-    @OneToMany
-    private List<Event> eventList;
 
 }

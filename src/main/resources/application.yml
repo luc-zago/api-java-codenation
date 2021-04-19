@@ -1,0 +1,11 @@
+swagger:
+  title: Error Manager
+  description: Projeto para obtenção de certicado de Java na Aceleração da Conta Azul pela Condenation
+  version: 1.0
+  terms-of-service-url: N/A
+  contact:
+    name: Grupo 3
+    url: linkdogithubdoprojeto
+    email: N/A
+  licence: MIT licence
+  licence-url: https://mit-license.org/
