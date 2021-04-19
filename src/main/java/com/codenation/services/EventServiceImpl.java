@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +27,8 @@ public class EventServiceImpl implements EventService {
         String email = object.getUser().getEmail();
         Long levelId = object.getLevel().getId();
         User user = this.userRepository.findByEmail(email);
-        Level level = this.levelRepository.findById(levelId).get();
+        Level level = this.levelRepository.findById(levelId)
+                .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
         if (user == null){
             throw new NullPointerException("Usuário não encontrado");
         }
@@ -35,7 +38,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Event findById(Long id) {
+        return this.eventRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+    }
+
+    @Override
     public List<Event> getAll(Pageable pageable) {
-        return eventRepository.findAll(pageable).getContent();
+        return this.eventRepository.findAll(pageable).getContent();
     }
 }

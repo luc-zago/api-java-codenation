@@ -31,12 +31,12 @@ public class UserController {
     private UserDTO toUserDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
-
+/*
     @GetMapping("/teste")
     @ApiOperation(value = "faz um teste")
     public String teste() {
         return "Olá teste";
-    }
+    } */
 
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")

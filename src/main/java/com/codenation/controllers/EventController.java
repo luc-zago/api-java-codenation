@@ -1,6 +1,7 @@
 package com.codenation.controllers;
 
 import com.codenation.dtos.EventDTO;
+import com.codenation.dtos.EventDTOWithLog;
 import com.codenation.models.Event;
 import com.codenation.services.EventServiceImpl;
 import io.swagger.annotations.Api;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -29,6 +31,16 @@ public class EventController {
 
     private EventDTO toEventDTO(Event event) {
         return modelMapper.map(event, EventDTO.class);
+    }
+    private EventDTOWithLog toEventDTOWithLog(Event event) {
+        return modelMapper.map(event, EventDTOWithLog.class);
+    }
+
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Busca evento por id")
+    public ResponseEntity<EventDTOWithLog> findById(@PathVariable("id") Long id){
+        Event event = eventService.findById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(event));
     }
 
     @PostMapping

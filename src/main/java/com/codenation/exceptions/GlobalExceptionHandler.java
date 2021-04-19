@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
             NoSuchElementException exception) {
         LocalDateTime time = LocalDateTime.now();
         int code = HttpStatus.BAD_REQUEST.value();
-        String message = "Level não encontrado";
+        String message = exception.getMessage();
         CustomizedExceptionHandlerResponse error = new CustomizedExceptionHandlerResponse(
                 code, message, time);
         return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, HttpStatus.BAD_REQUEST);
