@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -40,7 +41,7 @@ public class LoginController {
         Optional<User> loggedUser = userRepository.findByEmail(email);
         return loggedUser.map(
                 user -> ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(user, UserDTO.class))
-            ).orElseThrow(() -> new NoSuchElementException("Usuário não encontrado");
+            ).orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         
         // () -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null)
     }
