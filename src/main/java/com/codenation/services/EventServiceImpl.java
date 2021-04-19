@@ -26,12 +26,10 @@ public class EventServiceImpl implements EventService {
     public Event save(Event object) {
         String email = object.getUser().getEmail();
         Long levelId = object.getLevel().getId();
-        User user = this.userRepository.findByEmail(email);
+        User user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = this.levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        if (user == null){
-            throw new NullPointerException("Usuário não encontrado");
-        }
         object.setUser(user);
         object.setLevel(level);
         return this.eventRepository.save(object);
