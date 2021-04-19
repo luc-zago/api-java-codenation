@@ -1,15 +1,11 @@
 package com.codenation.models;
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Getter
-@Setter
 @Data
 @Table(name = "levels")
 public class Level {
@@ -18,10 +14,11 @@ public class Level {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @NotEmpty
     @Column(nullable = false, length = 10)
     private String description;
-
+/*
     @OneToMany
-    private List<Event> eventList;
+    private List<Event> eventList; */
 
 }

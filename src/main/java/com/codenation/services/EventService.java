@@ -1,6 +1,11 @@
 package com.codenation.services;
 
-public interface EventService extends ServiceInterface{
+import com.codenation.models.Event;
 
+import java.util.List;
+
+public interface EventService extends ServiceInterface<Event> {
+
+    public List<Event> getAll();
 
 }

@@ -1,4 +1,9 @@
 package com.codenation.services;
 
-public interface UserService extends ServiceInterface{
+import com.codenation.models.User;
+
+import java.util.List;
+
+public interface UserService extends ServiceInterface<User> {
+    public List<User> getAll();
 }

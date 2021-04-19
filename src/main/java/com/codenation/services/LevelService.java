@@ -1,4 +1,10 @@
 package com.codenation.services;
 
-public interface LevelService extends ServiceInterface{
+import com.codenation.models.Level;
+
+import java.util.List;
+
+public interface LevelService extends ServiceInterface<Level> {
+
+    public List<Level> getAll();
 }
