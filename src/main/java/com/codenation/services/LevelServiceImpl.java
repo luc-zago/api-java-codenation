@@ -5,6 +5,7 @@ import com.codenation.repositories.LevelRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
 
 @Service
@@ -18,6 +19,17 @@ public class LevelServiceImpl implements LevelService {
         return this.levelRepository.save(object);
     }
 
+    @Override
+    public Level register(Level level) throws InstanceAlreadyExistsException {
+        String description = level.getDescription();
+        Level checkLevel = this.levelRepository.findByDescription(description);
+        if (checkLevel == null) {
+            return save(level);
+        } else {
+            throw new InstanceAlreadyExistsException("Level já cadastrado");
+        }    }
+
+    @Override
     public List<Level> getAll() { return this.levelRepository.findAll(); }
 
 }

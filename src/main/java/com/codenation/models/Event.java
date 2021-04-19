@@ -1,6 +1,6 @@
 package com.codenation.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,31 +16,43 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-    @NotEmpty
-    @Column(nullable = false)
+
+    @NotEmpty(message = "O campo 'descrição' é obrigatório")
     private String description;
 
-    @NotEmpty
-    @Column(nullable = false)
+    @NotEmpty(message = "O campo 'log' é obrigatório")
     private String log;
 
-    @NotEmpty
-    @Column(nullable = false, length = 100)
+    @NotEmpty(message = "O campo 'origem' é obrigatório")
+    @Column(length = 100)
     private String origin;
 
-    @Column(nullable = false)
+    @NotNull(message = "O campo 'data' é obrigatório")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDate date;
 
-    @Column(nullable = false)
+    @NotNull(message = "O campo 'quantidade' é obrigatório")
     private Integer quantity;
 
-    @NotNull
-    @ManyToOne
+    @NotNull(message = "O campo 'usuário' é obrigatório")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
 
-    @NotNull
-    @ManyToOne
+    @NotNull(message = "O campo 'level' é obrigatório")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "levels_id")
     private Level level;
+
+    @JsonProperty("user")
+    private void UserConverter (String email) {
+        this.user = new User();
+        user.setEmail(email);
+    }
+
+    @JsonProperty("level")
+    private void LevelConverter (Long levelId) {
+        this.level = new Level();
+        level.setId(levelId);
+    }
 
 }

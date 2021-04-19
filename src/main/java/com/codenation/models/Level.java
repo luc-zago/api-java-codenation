@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.List;
 
 @Entity
 @Data
@@ -14,11 +15,8 @@ public class Level {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @NotEmpty
-    @Column(nullable = false, length = 10)
+    @NotEmpty(message = "O campo 'descrição' é obrigatório")
+    @Column(length = 10)
     private String description;
-/*
-    @OneToMany
-    private List<Event> eventList; */
 
 }
