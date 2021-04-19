@@ -6,9 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import javax.management.InstanceAlreadyExistsException;
 import java.time.LocalDateTime;
-import java.util.NoSuchElementException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -34,18 +32,4 @@ public class GlobalExceptionHandler {
         String message = exception.getMessage();
         return exceptionResponse(message);
     }
-/*
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<CustomizedExceptionHandlerResponse> handleNoSuchElementException(
-            NoSuchElementException exception) {
-        String message = exception.getMessage();
-        return exceptionResponse(message);
-    }
-
-    @ExceptionHandler(InstanceAlreadyExistsException.class)
-    public ResponseEntity<CustomizedExceptionHandlerResponse> handleInstanceAlreadyExistsException(
-            NoSuchElementException exception) {
-        String message = exception.getMessage();
-        return exceptionResponse(message);
-    } */
 }
