@@ -40,6 +40,8 @@ public class LoginController {
         Optional<User> loggedUser = userRepository.findByEmail(email);
         return loggedUser.map(
                 user -> ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(user, UserDTO.class))
-            ).orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null));
+            ).orElseGet(() -> throw new NullPointerException("Usuário não encontrado");
+        
+        // () -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null)
     }
 }
