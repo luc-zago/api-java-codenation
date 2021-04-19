@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +43,7 @@ public class UserController {
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
     public ResponseEntity<User> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         User userCreated = userService.register(user);
         if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
