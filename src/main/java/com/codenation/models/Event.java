@@ -27,7 +27,7 @@ public class Event {
     @Column(length = 100)
     private String origin;
 
-    @NotNull
+    @NotNull(message = "O campo 'data' é obrigatório")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDate date;
 

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.InstanceAlreadyExistsException;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -30,8 +31,8 @@ public class LevelController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo tipo de level")
-    public ResponseEntity<Level> register(@RequestBody @Valid Level level) {
-        Level levelCreated = levelService.save(level);
+    public ResponseEntity<Level> register(@RequestBody @Valid Level level) throws InstanceAlreadyExistsException {
+        Level levelCreated = levelService.register(level);
         if (levelCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {

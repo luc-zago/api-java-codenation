@@ -13,6 +13,7 @@ import com.codenation.models.User;
 import org.springframework.http.HttpStatus;
 import org.modelmapper.ModelMapper;
 
+import javax.management.InstanceAlreadyExistsException;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,8 +41,8 @@ public class UserController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
-    public ResponseEntity<User> register(@RequestBody @Valid User user) {
-        User userCreated = userService.save(user);
+    public ResponseEntity<User> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
+        User userCreated = userService.register(user);
         if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
