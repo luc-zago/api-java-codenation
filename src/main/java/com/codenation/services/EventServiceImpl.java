@@ -44,6 +44,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<Event> findByDescription(String description, Pageable pageable) {
+        return this.eventRepository.findByDescription(description, pageable).getContent();
+    }
+
+    @Override
     public List<Event> getAll(Pageable pageable) {
         return this.eventRepository.findAll(pageable).getContent();
     }

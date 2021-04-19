@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface EventService extends ServiceInterface<Event> {
 
     public Event findById(Long id);
-
+    public List<Event> findByDescription(String description, Pageable pageable);
     public List<Event> getAll(Pageable pageable);
 
 }

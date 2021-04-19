@@ -6,6 +6,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
 @Entity
 @Data
@@ -21,8 +22,17 @@ public class User {
     @Column(length = 50)
     private String email;
 
+    @NotEmpty(message = "O campo 'nome' é obrigatório")
+    @Column(length = 50)
+    private String nome;
+
+    @NotEmpty(message = "O campo 'sobrenome' é obrigatório")
+    @Column(length = 100)
+    private String sobrenome;
+
     @NotEmpty(message = "O campo 'senha' é obrigatório")
     @Column(length = 100)
+    @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
     private String password;
 
 }

@@ -43,6 +43,14 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(event));
     }
 
+    @GetMapping("/{description}")
+    @ApiOperation(value = "Busca evento por descrição")
+    public ResponseEntity<List<EventDTO>> findByDescription(@PathVariable("description") String desc, Pageable pageable){
+        List<Event> eventsList = eventService.findByDescription(desc, pageable);
+        return ResponseEntity.status(HttpStatus.OK).body(eventsList
+                .stream().map(this::toEventDTO).collect(Collectors.toList()));
+    }
+
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
     public ResponseEntity<EventDTO> register(@RequestBody @Valid Event event) {

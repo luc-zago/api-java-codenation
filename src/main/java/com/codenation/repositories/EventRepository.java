@@ -9,5 +9,5 @@ public interface EventRepository extends JpaRepository<Event, Long> {
 
     @Override
     Page<Event> findAll(Pageable pageable);
-
+    Page<Event> findByDescription(String description, Pageable pageable);
 }
