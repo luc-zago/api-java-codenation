@@ -7,12 +7,20 @@ import org.springframework.stereotype.Service;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     final private UserRepository userRepository;
+
+    @Override
+    public User loggedUser(String email) {
+        User user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));;
+        return user;
+    }
 
     @Override
     public User register(User user) throws InstanceAlreadyExistsException {

@@ -1,6 +1,7 @@
 package com.codenation.controllers;
 
 import com.codenation.dtos.UserDTO;
+import com.codenation.dtos.UserDTOWithId;
 import com.codenation.services.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,10 +32,11 @@ public class UserController {
     private ModelMapper modelMapper;
 
     private UserDTO toUserDTO(User user) {
-        UserDTO userToDTO = new UserDTO(user.getId(),
-                user.getFirstname() + " " + user.getLastname(),
-                user.getEmail());
-        return userToDTO;
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    private UserDTOWithId toUserWithId(User user) {
+        return modelMapper.map(user, UserDTOWithId.class);
     }
 
     @PostMapping
@@ -51,8 +53,8 @@ public class UserController {
     
     @GetMapping("/all")
     @ApiOperation(value = "Retorna todos os usuários")
-    public ResponseEntity<List<UserDTO>> getAll(){
+    public ResponseEntity<List<UserDTOWithId>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll()
-            .stream().map(this::toUserDTO).collect(Collectors.toList()));
+            .stream().map(this::toUserWithId).collect(Collectors.toList()));
     }
 }
