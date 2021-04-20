@@ -12,6 +12,8 @@ spring:
 
 authorization:
   email: ${USER_EMAIL:admin@admin.com}
+  firstname: ${FIRST_NAME:Administrador}
+  lastname: ${LAST_NAME:Administrador}
   password: ${USER_PASSWORD:admin}
   client:
     id: ${CLIENT_ID:client-id}
