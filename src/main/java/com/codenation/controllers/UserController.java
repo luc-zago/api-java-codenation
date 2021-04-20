@@ -31,24 +31,21 @@ public class UserController {
     private ModelMapper modelMapper;
 
     private UserDTO toUserDTO(User user) {
-        return modelMapper.map(user, UserDTO.class);
+        UserDTO userToDTO = new UserDTO(user.getId(),
+                user.getFirstname() + " " + user.getLastname(),
+                user.getEmail());
+        return userToDTO;
     }
-/*
-    @GetMapping("/teste")
-    @ApiOperation(value = "faz um teste")
-    public String teste() {
-        return "Olá teste";
-    } */
 
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
-    public ResponseEntity<User> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
+    public ResponseEntity<UserDTO> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         User userCreated = userService.register(user);
         if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
+            return ResponseEntity.status(HttpStatus.CREATED).body(toUserDTO(userCreated));
         }
     }
     
