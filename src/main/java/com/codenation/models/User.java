@@ -27,11 +27,11 @@ public class User {
 
     @NotEmpty(message = "O campo 'nome' é obrigatório")
     @Column(length = 50)
-    private String nome;
+    private String firstname;
 
     @NotEmpty(message = "O campo 'sobrenome' é obrigatório")
     @Column(length = 100)
-    private String sobrenome;
+    private String lastname;
 
     @NotEmpty(message = "O campo 'senha' é obrigatório")
     @Column(length = 100)

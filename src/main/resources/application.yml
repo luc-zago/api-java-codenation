@@ -7,11 +7,13 @@ spring:
       ddl-auto: update
   datasource:
     username: ${USERNAME:postgres}
-    password: ${PASSWORD:291197}
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/tools_manager}
+    password: ${PASSWORD:204615}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/error_manager}
 
 authorization:
   email: ${USER_EMAIL:admin@admin.com}
+  firstname: ${FIRST_NAME:Administrador}
+  lastname: ${LAST_NAME:Administrador}
   password: ${USER_PASSWORD:admin}
   client:
     id: ${CLIENT_ID:client-id}
