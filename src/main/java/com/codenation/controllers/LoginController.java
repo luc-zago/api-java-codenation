@@ -37,7 +37,7 @@ public class LoginController {
     }
 
     @PostMapping
-    @ApiOperation(value = "Retorna o usuário logado")
+    @ApiOperation(value = "Recebe um email e retorna o nome e sobrenome do usuário")
     public ResponseEntity<LoginDTO> loggedUser(@RequestBody User user) {
         System.out.println(user.getEmail());
         User loggedUser = userService.loggedUser(user.getEmail());
