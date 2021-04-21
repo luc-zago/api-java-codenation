@@ -38,7 +38,6 @@ public class Event {
     @NotNull(message = "O campo 'quantidade' é obrigatório")
     private Integer quantity;
 
-    @NotNull(message = "O campo 'usuário' é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private User user;
 
@@ -46,12 +45,12 @@ public class Event {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "levels_id")
     private Level level;
-
+/*
     @JsonProperty("user")
     private void UserConverter (String email) {
         this.user = new User();
         user.setEmail(email);
-    }
+    } */
 
     @JsonProperty("level")
     private void LevelConverter (Long levelId) {

@@ -8,10 +8,13 @@ import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -24,23 +27,33 @@ public class EventServiceImpl implements EventService {
     final private LevelRepository levelRepository;
 
     @Override
-    public Event save(Event object) {
-        String email = object.getUser().getEmail();
-        Long levelId = object.getLevel().getId();
+    public Event save(Event event) {
+        return this.eventRepository.save(event);
+    }
+
+    public Event register(Event event, Object principal) {
+        String email;
+
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails)principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+        Long levelId = event.getLevel().getId();
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = this.levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
         List<Event> eventsList = this.eventRepository
                 .findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
-                        object.getDescription(), object.getLog(), object.getOrigin(), object.getDate(),
-                        object.getQuantity(), level.getDescription());
+                        event.getDescription(), event.getLog(), event.getOrigin(), event.getDate(),
+                        event.getQuantity(), level.getDescription());
         if (!eventsList.isEmpty()) {
             throw new IllegalArgumentException("Evento já cadastrado");
         }
-        object.setUser(user);
-        object.setLevel(level);
-        return this.eventRepository.save(object);
+        event.setUser(user);
+        event.setLevel(level);
+        return save(event);
     }
 
     @Override
@@ -129,4 +142,31 @@ public class EventServiceImpl implements EventService {
     public List<Event> getAll(Pageable pageable) {
         return this.eventRepository.findAll(pageable).getContent();
     }
+
+    public List<Event> checkFields(String description, String origin, String date,
+                                   Integer quantity, String email, String level, Pageable pageable) {
+        System.out.println(date);
+
+        if (description == null) {
+            description = "";
+        }
+        if (origin == null) {
+            origin = "";
+        }
+        if (email == null) {
+            email = "";
+        }
+        if (level == null) {
+            level = "";
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        List<Event> eventList = this.eventRepository
+                .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
+                description, origin, email, level, pageable
+        ).getContent();
+        System.out.println(eventList.size());
+        return eventList;
+    }
+
 }

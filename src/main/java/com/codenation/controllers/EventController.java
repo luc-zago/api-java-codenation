@@ -11,9 +11,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,75 +45,11 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(event));
     }
 
-    @GetMapping("/descricao/{description}")
-    @ApiOperation(value = "Busca evento por descrição")
-    public ResponseEntity<List<EventDTO>> findAllByDescription(
-            @PathVariable("description") String desc, Pageable pageable){
-        List<Event> eventsList = eventService.findAllByDescription(desc, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(eventsList
-                .stream().map(this::toEventDTO).collect(Collectors.toList()));
-    }
-
-    @GetMapping("/log/{log}")
-    @ApiOperation(value = "Busca evento por log")
-    public ResponseEntity<List<Event>> findAllByLog(
-            @PathVariable("log") String log, Pageable pageable){
-        List<Event> eventsList = eventService.findAllByLog(log, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(eventsList);
-    }
-
-    @GetMapping("/origem/{origin}")
-    @ApiOperation(value = "Busca evento por origem")
-    public ResponseEntity<List<EventDTO>> findAllByOrigin(
-            @PathVariable("origin") String origin, Pageable pageable){
-        List<Event> eventsList = eventService.findAllByOrigin(origin, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(eventsList
-                .stream().map(this::toEventDTO).collect(Collectors.toList()));
-    }
-
-    @GetMapping("/data/{day}/{month}/{year}")
-    @ApiOperation(value = "Busca evento por data")
-    public ResponseEntity<List<EventDTO>> findAllByDate(
-            @PathVariable("day") String day,
-            @PathVariable("month") String month,
-            @PathVariable("year") String year,
-            Pageable pageable){
-        List<Event> eventsList = eventService.findAllByDate(day, month, year, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(eventsList
-                .stream().map(this::toEventDTO).collect(Collectors.toList()));
-    }
-
-    @GetMapping("/quantidade/{quantity}")
-    @ApiOperation(value = "Busca evento por quantidade")
-    public ResponseEntity<List<EventDTO>> findAllByQuantity(
-            @PathVariable("quantity") Integer qtt, Pageable pageable){
-        List<Event> eventsList = eventService.findAllByQuantity(qtt, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(eventsList
-                .stream().map(this::toEventDTO).collect(Collectors.toList()));
-    }
-
-    @GetMapping("/email/{email}")
-    @ApiOperation(value = "Busca evento por e-mail do usuário")
-    public ResponseEntity<List<EventDTO>> findAllByEmail(
-            @PathVariable("email") String email, Pageable pageable){
-        List<Event> eventsList = eventService.findAllByEmail(email, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(eventsList
-                .stream().map(this::toEventDTO).collect(Collectors.toList()));
-    }
-
-    @GetMapping("/level/{level}")
-    @ApiOperation(value = "Busca evento por level")
-    public ResponseEntity<List<EventDTO>> findAllByLevel(
-            @PathVariable("level") String level, Pageable pageable){
-        List<Event> eventsList = eventService.findAllByLevel(level, pageable);
-        return ResponseEntity.status(HttpStatus.OK).body(eventsList
-                .stream().map(this::toEventDTO).collect(Collectors.toList()));
-    }
-
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
     public ResponseEntity<EventDTO> register(@RequestBody @Valid Event event) {
-        Event eventCreated = eventService.save(event);
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Event eventCreated = eventService.register(event, principal);
         if (eventCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
@@ -120,8 +59,16 @@ public class EventController {
 
     @GetMapping
     @ApiOperation(value = "Retorna todos os eventos")
-    public ResponseEntity<List<EventDTO>> getAll(Pageable pageable){
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.getAll(pageable)
+    public ResponseEntity<List<EventDTO>> getAll(
+            @PathParam("description") String description,
+            @PathParam("origin") String origin,
+            @PathParam("date") String date,
+            @PathParam("quantity") Integer quantity,
+            @PathParam("email") String email,
+            @PathParam("level") String level,
+            Pageable pageable) {
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.checkFields(description,
+                origin, date, quantity, email, level, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
 
