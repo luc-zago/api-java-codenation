@@ -24,21 +24,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event save(Event object) {
-        String desc = object.getDescription();
-        String log = object.getLog();
-        String origin = object.getOrigin();
-        LocalDate date = object.getDate();
-        Integer qtt = object.getQuantity();
         String email = object.getUser().getEmail();
         Long levelId = object.getLevel().getId();
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = this.levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        String levelDesc = level.getDescription();
         List<Event> eventsList = this.eventRepository
                 .findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
-                        desc, log, origin, date, qtt, levelDesc);
+                        object.getDescription(), object.getLog(), object.getOrigin(), object.getDate(),
+                        object.getQuantity(), level.getDescription());
         if (!eventsList.isEmpty()) {
             throw new IllegalArgumentException("Evento já cadastrado");
         }
