@@ -44,7 +44,8 @@ public class EventController {
 
     @GetMapping("/descricao/{description}")
     @ApiOperation(value = "Busca evento por descrição")
-    public ResponseEntity<List<EventDTO>> findAllByDescription(@PathVariable("description") String desc, Pageable pageable){
+    public ResponseEntity<List<EventDTO>> findAllByDescription(
+            @PathVariable("description") String desc, Pageable pageable){
         List<Event> eventsList = eventService.findAllByDescription(desc, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(eventsList
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
@@ -52,14 +53,16 @@ public class EventController {
 
     @GetMapping("/log/{log}")
     @ApiOperation(value = "Busca evento por log")
-    public ResponseEntity<List<Event>> findAllByLog(@PathVariable("log") String log, Pageable pageable){
+    public ResponseEntity<List<Event>> findAllByLog(
+            @PathVariable("log") String log, Pageable pageable){
         List<Event> eventsList = eventService.findAllByLog(log, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(eventsList);
     }
 
     @GetMapping("/origem/{origin}")
     @ApiOperation(value = "Busca evento por origem")
-    public ResponseEntity<List<EventDTO>> findAllByOrigin(@PathVariable("origin") String origin, Pageable pageable){
+    public ResponseEntity<List<EventDTO>> findAllByOrigin(
+            @PathVariable("origin") String origin, Pageable pageable){
         List<Event> eventsList = eventService.findAllByOrigin(origin, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(eventsList
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
@@ -86,7 +89,7 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(eventsList
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
-/*
+
     @GetMapping("/email/{email}")
     @ApiOperation(value = "Busca evento por e-mail do usuário")
     public ResponseEntity<List<EventDTO>> findAllByEmail(
@@ -98,11 +101,12 @@ public class EventController {
 
     @GetMapping("/level/{level}")
     @ApiOperation(value = "Busca evento por level")
-    public ResponseEntity<List<EventDTO>> findAllByLevel(@PathVariable("level") String level, Pageable pageable){
+    public ResponseEntity<List<EventDTO>> findAllByLevel(
+            @PathVariable("level") String level, Pageable pageable){
         List<Event> eventsList = eventService.findAllByLevel(level, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(eventsList
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
-    } */
+    }
 
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")

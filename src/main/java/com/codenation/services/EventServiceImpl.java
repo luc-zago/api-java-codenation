@@ -10,10 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.EmptyStackException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -25,12 +24,24 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event save(Event object) {
+        String desc = object.getDescription();
+        String log = object.getLog();
+        String origin = object.getOrigin();
+        LocalDate date = object.getDate();
+        Integer qtt = object.getQuantity();
         String email = object.getUser().getEmail();
         Long levelId = object.getLevel().getId();
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = this.levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
+        String levelDesc = level.getDescription();
+        List<Event> eventsList = this.eventRepository
+                .findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
+                        desc, log, origin, date, qtt, levelDesc);
+        if (!eventsList.isEmpty()) {
+            throw new IllegalArgumentException("Evento já cadastrado");
+        }
         object.setUser(user);
         object.setLevel(level);
         return this.eventRepository.save(object);
@@ -76,6 +87,19 @@ public class EventServiceImpl implements EventService {
     @Override
     public List<Event> findAllByQuantity(Integer quantity, Pageable pageable) {
         List<Event> eventsList = this.eventRepository.findAllByQuantity(quantity, pageable).getContent();
+        return checkList(eventsList);
+    }
+
+    @Override
+    public List<Event> findAllByEmail(String email, Pageable pageable) {
+        List<Event> eventsList = this.eventRepository.findAllByUserEmail(email, pageable).getContent();
+        return checkList(eventsList);
+    }
+
+    @Override
+    public List<Event> findAllByLevel(String level, Pageable pageable) {
+        List<Event> eventsList = this.eventRepository.findAllByLevelDescription(level, pageable)
+                .getContent();
         return checkList(eventsList);
     }
 

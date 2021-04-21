@@ -1,10 +1,10 @@
 package com.codenation.services;
 
 import com.codenation.models.Event;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface EventService extends ServiceInterface<Event> {
 
@@ -14,6 +14,8 @@ public interface EventService extends ServiceInterface<Event> {
     public List<Event> findAllByOrigin(String origin, Pageable pageable);
     public List<Event> findAllByDate(String date, Pageable pageable);
     public List<Event> findAllByQuantity(Integer quantity, Pageable pageable);
+    public List<Event> findAllByEmail(String email, Pageable pageable);
+    public List<Event> findAllByLevel(String level, Pageable pageable);
     public List<Event> getAll(Pageable pageable);
 
 }
