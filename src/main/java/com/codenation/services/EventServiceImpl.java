@@ -90,6 +90,7 @@ public class EventServiceImpl implements EventService {
         if (date == null || date.isEmpty()) {
             return this.eventRepository.findAll(pageable).getContent();
         }
+        System.out.println(date);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
         List<Event> eventsList = this.eventRepository.findAllByDate(localDate, pageable).getContent();
