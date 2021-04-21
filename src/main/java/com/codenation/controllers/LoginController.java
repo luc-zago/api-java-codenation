@@ -1,34 +1,27 @@
 package com.codenation.controllers;
 
 import com.codenation.dtos.LoginDTO;
+import com.codenation.dtos.UserDTO;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 
-import com.codenation.services.UserServiceImpl;
-import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.validation.Valid;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/login")
 @AllArgsConstructor
 public class LoginController {
 
-    //private final UserRepository userRepository;
-
-    private final UserServiceImpl userService;
+    private final UserRepository userRepository;
 
     private final ModelMapper modelMapper;
 
@@ -36,15 +29,7 @@ public class LoginController {
         return modelMapper.map(user, LoginDTO.class);
     }
 
-    @PostMapping
-    @ApiOperation(value = "Recebe um email e retorna o nome e sobrenome do usuário")
-    public ResponseEntity<LoginDTO> loggedUser(@RequestBody User user) {
-        System.out.println(user.getEmail());
-        User loggedUser = userService.loggedUser(user.getEmail());
-        return ResponseEntity.status(HttpStatus.CREATED).body(toLoginDTO(loggedUser));
-    }
-/*
-    @PostMapping
+    @GetMapping
     public ResponseEntity<UserDTO> login() {
         String email;
 
@@ -62,5 +47,5 @@ public class LoginController {
             ).orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         
         // () -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null)
-    } */
+    }
 }
