@@ -12,7 +12,7 @@ import java.util.List;
 public class Level {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotEmpty(message = "O campo 'descrição' é obrigatório")

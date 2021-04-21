@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Event {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotEmpty(message = "O campo 'descrição' é obrigatório")
@@ -43,14 +43,7 @@ public class Event {
 
     @NotNull(message = "O campo 'level' é obrigatório")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "levels_id")
     private Level level;
-/*
-    @JsonProperty("user")
-    private void UserConverter (String email) {
-        this.user = new User();
-        user.setEmail(email);
-    } */
 
     @JsonProperty("level")
     private void LevelConverter (Long levelId) {
