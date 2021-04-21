@@ -68,7 +68,7 @@ public class EventController {
     public ResponseEntity<List<EventDTO>> getAll(
             @RequestParam(value = "description", required = false, defaultValue = "") String description,
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
-            @RequestParam(value = "date", required = false, defaultValue = "") String date,
+            @RequestParam(value = "date", required = false) String date,
             @RequestParam(value = "quantity", required = false) Integer quantity,
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
             @RequestParam(value = "level", required = false, defaultValue = "") String level,

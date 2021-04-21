@@ -29,14 +29,7 @@ public class LevelServiceImpl implements LevelService {
             throw new InstanceAlreadyExistsException("Level já cadastrado");
         }    }
 
-    public List<Level> checkList(List<Level> levelList) {
-        if (levelList.isEmpty()) {
-            throw new IllegalArgumentException("Nenhum level encontrado");
-        }
-        return levelList;
-    }
-
     @Override
-    public List<Level> getAll() { return checkList(this.levelRepository.findAll()); }
+    public List<Level> getAll() { return this.levelRepository.findAll(); }
 
 }

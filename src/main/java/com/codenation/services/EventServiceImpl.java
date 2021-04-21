@@ -8,13 +8,11 @@ import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -62,49 +60,40 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
     }
 
-    public List<Event> checkList(List<Event> eventsList) {
-        if (eventsList.isEmpty()) {
-            throw new IllegalArgumentException("Nenhum evento encontrado");
-        }
-        return eventsList;
-    }
-
     @Override
     public List<Event> getAll(Pageable pageable) {
-        return checkList(this.eventRepository.findAll(pageable).getContent());
+        return this.eventRepository.findAll(pageable).getContent();
     }
 
     @Override
     public List<Event> filter(String description, String origin, String date,
                                    Integer quantity, String email, String level, Pageable pageable) {
-        if (description == null && origin == null && date == null && quantity == null && email == null
-        && level == null) {
-            return getAll(pageable);
+        LocalDate localDate = null;
+        if (date.length() == 10) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            localDate = LocalDate.parse(date, formatter);
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate localDate = LocalDate.parse(date, formatter);
         if (localDate == null && quantity == null) {
-            return checkList(this.eventRepository
-                    .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                            description, origin, email, level, pageable
-                    ).getContent());
+            return this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
+                    description, origin, email, level, pageable
+            ).getContent();
         }
         if (localDate != null && quantity == null) {
-            return checkList(this.eventRepository
+            return this.eventRepository
                     .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDate(
                             description, origin, email, level, localDate, pageable
-            ).getContent());
+            ).getContent();
         }
         if (localDate == null && quantity != null) {
-            return checkList(this.eventRepository
+            return this.eventRepository
                     .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantity(
                             description, origin, email, level, quantity, pageable
-                    ).getContent());
+                    ).getContent();
         }
-        return checkList(this.eventRepository
-                .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDateAndQuantity(
-                        description, origin, email, level, localDate, quantity, pageable
-                ).getContent());
+        return this.eventRepository
+                .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantityAndDate(
+                        description, origin, email, level, quantity, localDate, pageable
+                ).getContent();
     }
 
 }
