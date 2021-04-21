@@ -12,7 +12,7 @@ public class CreateEventDTO {
     private String origin;
     private LocalDate date;
     private Integer quantity;
-    private String userEmail;
+    private String user;
     private String levelDescription;
 
 }

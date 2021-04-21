@@ -39,7 +39,9 @@ public class EventController {
         return modelMapper.map(event, EventDTO.class);
     }
     private EventDTOWithLog toEventDTOWithLog(Event event) {
-        return modelMapper.map(event, EventDTOWithLog.class);
+        return new EventDTOWithLog(event.getId(), event.getDescription(), event.getLog(),
+                event.getOrigin(), event.getDate(), event.getQuantity(), event.getUser().getEmail(),
+                event.getLevel().getDescription());
     }
 
     @GetMapping("/{id}")
