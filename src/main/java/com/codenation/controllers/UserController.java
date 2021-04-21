@@ -1,6 +1,7 @@
 package com.codenation.controllers;
 
 import com.codenation.dtos.UserDTO;
+import com.codenation.dtos.UserDTOWithId;
 import com.codenation.services.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -33,29 +34,27 @@ public class UserController {
     private UserDTO toUserDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
     }
-/*
-    @GetMapping("/teste")
-    @ApiOperation(value = "faz um teste")
-    public String teste() {
-        return "Olá teste";
-    } */
+
+    private UserDTOWithId toUserWithId(User user) {
+        return modelMapper.map(user, UserDTOWithId.class);
+    }
 
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
-    public ResponseEntity<User> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
+    public ResponseEntity<UserDTO> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         User userCreated = userService.register(user);
         if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(userCreated);
+            return ResponseEntity.status(HttpStatus.CREATED).body(toUserDTO(userCreated));
         }
     }
     
     @GetMapping("/all")
     @ApiOperation(value = "Retorna todos os usuários")
-    public ResponseEntity<List<UserDTO>> getAll(){
+    public ResponseEntity<List<UserDTOWithId>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll()
-            .stream().map(this::toUserDTO).collect(Collectors.toList()));
+            .stream().map(this::toUserWithId).collect(Collectors.toList()));
     }
 }

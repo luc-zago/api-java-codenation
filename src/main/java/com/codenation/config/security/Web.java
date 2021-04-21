@@ -22,11 +22,14 @@ public class Web extends WebSecurityConfigurerAdapter {
     @Value("${authorization.email}")
     private String USER_EMAIL;
 
+    @Value("${authorization.firstname}")
+    private String FIRST_NAME;
+
+    @Value("${authorization.lastname}")
+    private String LAST_NAME;
+
     @Value("${authorization.password}")
     private String USER_PASSWORD;
-
-    @Value("Administrador")
-    private String USER_NAME;
 
     @Bean
     public AuthenticationManager customAuthenticationManager() throws Exception {
@@ -38,6 +41,8 @@ public class Web extends WebSecurityConfigurerAdapter {
         if (userRepository.count() == 0) {
             userRepository.save(User.builder()
                     .email(USER_EMAIL)
+                    .firstname(FIRST_NAME)
+                    .lastname(LAST_NAME)
                     .password(passwordEncoder().encode(USER_PASSWORD))
                     .build());
         }

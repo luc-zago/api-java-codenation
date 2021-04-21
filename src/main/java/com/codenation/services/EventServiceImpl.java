@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.EmptyStackException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -39,6 +40,43 @@ public class EventServiceImpl implements EventService {
     public Event findById(Long id) {
         return this.eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+    }
+
+    public List<Event> checkList(List<Event> eventsList) {
+        if (eventsList.isEmpty()) {
+            throw new IllegalArgumentException("Nenhum evento encontrado");
+        }
+        return eventsList;
+    }
+
+    @Override
+    public List<Event> findAllByDescription(String description, Pageable pageable) {
+        List<Event> eventsList = this.eventRepository.findAllByDescription(description, pageable).getContent();
+        return checkList(eventsList);
+    }
+
+    @Override
+    public List<Event> findAllByLog(String log, Pageable pageable) {
+        List<Event> eventsList = this.eventRepository.findAllByLog(log, pageable).getContent();
+        return checkList(eventsList);
+    }
+
+    @Override
+    public List<Event> findAllByOrigin(String origin, Pageable pageable) {
+        List<Event> eventsList = this.eventRepository.findAllByOrigin(origin, pageable).getContent();
+        return checkList(eventsList);
+    }
+
+    @Override
+    public List<Event> findAllByDate(String date, Pageable pageable) {
+        List<Event> eventsList = this.eventRepository.findAllByDate(date, pageable).getContent();
+        return checkList(eventsList);
+    }
+
+    @Override
+    public List<Event> findAllByQuantity(Integer quantity, Pageable pageable) {
+        List<Event> eventsList = this.eventRepository.findAllByQuantity(quantity, pageable).getContent();
+        return checkList(eventsList);
     }
 
     @Override
