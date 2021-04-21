@@ -67,7 +67,7 @@ public class EventController {
             @PathParam("email") String email,
             @PathParam("level") String level,
             Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.checkFields(description,
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.filter(description,
                 origin, date, quantity, email, level, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }

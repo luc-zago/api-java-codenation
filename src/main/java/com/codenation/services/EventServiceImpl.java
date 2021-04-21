@@ -68,8 +68,12 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> checkFields(String description, String origin, String date,
+    public List<Event> filter(String description, String origin, String date,
                                    Integer quantity, String email, String level, Pageable pageable) {
+        if (description == null && origin == null && date == null && quantity == null && email == null
+        && level == null) {
+            return getAll(pageable);
+        }
         if (description == null) {
             description = "";
         }
