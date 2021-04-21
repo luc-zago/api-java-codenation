@@ -62,9 +62,16 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
     }
 
+    public List<Event> checkList(List<Event> eventsList) {
+        if (eventsList.isEmpty()) {
+            throw new IllegalArgumentException("Nenhum evento encontrado");
+        }
+        return eventsList;
+    }
+
     @Override
     public List<Event> getAll(Pageable pageable) {
-        return this.eventRepository.findAll(pageable).getContent();
+        return checkList(this.eventRepository.findAll(pageable).getContent());
     }
 
     @Override
@@ -89,27 +96,27 @@ public class EventServiceImpl implements EventService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
         if (localDate == null && quantity == null) {
-            return this.eventRepository
+            return checkList(this.eventRepository
                     .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
                             description, origin, email, level, pageable
-                    ).getContent();
+                    ).getContent());
         }
         if (localDate != null && quantity == null) {
-            return this.eventRepository
+            return checkList(this.eventRepository
                     .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDate(
                             description, origin, email, level, localDate, pageable
-            ).getContent();
+            ).getContent());
         }
         if (localDate == null && quantity != null) {
-            return this.eventRepository
+            return checkList(this.eventRepository
                     .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantity(
                             description, origin, email, level, quantity, pageable
-                    ).getContent();
+                    ).getContent());
         }
-        return this.eventRepository
+        return checkList(this.eventRepository
                 .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDateAndQuantity(
                         description, origin, email, level, localDate, quantity, pageable
-                ).getContent();
+                ).getContent());
     }
 
 }
