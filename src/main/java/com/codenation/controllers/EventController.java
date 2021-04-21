@@ -1,5 +1,6 @@
 package com.codenation.controllers;
 
+import com.codenation.dtos.CreateEventDTO;
 import com.codenation.dtos.EventDTO;
 import com.codenation.dtos.EventDTOWithLog;
 import com.codenation.models.Event;
@@ -31,6 +32,9 @@ public class EventController {
 
     private ModelMapper modelMapper;
 
+    private CreateEventDTO toCreateEventDTO(Event event) {
+        return modelMapper.map(event, CreateEventDTO.class);
+    }
     private EventDTO toEventDTO(Event event) {
         return modelMapper.map(event, EventDTO.class);
     }
@@ -47,13 +51,13 @@ public class EventController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
-    public ResponseEntity<EventDTO> register(@RequestBody @Valid Event event) {
+    public ResponseEntity<CreateEventDTO> register(@RequestBody @Valid Event event) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Event eventCreated = eventService.register(event, principal);
         if (eventCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(toEventDTO(eventCreated));
+            return ResponseEntity.status(HttpStatus.CREATED).body(toCreateEventDTO(eventCreated));
         }
     }
 
