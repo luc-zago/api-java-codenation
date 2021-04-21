@@ -12,7 +12,6 @@ public class EventDTO {
     private String origin;
     private LocalDate date;
     private Integer quantity;
-    private String userEmail;
     private String levelDescription;
 
 }
