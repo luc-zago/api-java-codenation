@@ -16,13 +16,6 @@ public class UserServiceImpl implements UserService {
     final private UserRepository userRepository;
 
     @Override
-    public User loggedUser(String email) {
-        User user = this.userRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));;
-        return user;
-    }
-
-    @Override
     public User register(User user) throws InstanceAlreadyExistsException {
         String email = user.getEmail();
         User checkUser = this.userRepository.findByEmail(email).orElse(null);
