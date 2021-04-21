@@ -5,6 +5,7 @@ import com.codenation.dtos.UserDTO;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -30,6 +31,7 @@ public class LoginController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Retorna o email, nome e sobrenome do usuário logado")
     public ResponseEntity<UserDTO> login() {
         String email;
 

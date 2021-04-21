@@ -51,7 +51,7 @@ public class UserController {
         }
     }
     
-    @GetMapping("/all")
+    @GetMapping
     @ApiOperation(value = "Retorna todos os usuários")
     public ResponseEntity<List<UserDTOWithId>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll()

@@ -8,12 +8,13 @@ import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.util.EmptyStackException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -24,16 +25,33 @@ public class EventServiceImpl implements EventService {
     final private LevelRepository levelRepository;
 
     @Override
-    public Event save(Event object) {
-        String email = object.getUser().getEmail();
-        Long levelId = object.getLevel().getId();
+    public Event save(Event event) {
+        return this.eventRepository.save(event);
+    }
+
+    public Event register(Event event, Object principal) {
+        String email;
+
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails)principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+        Long levelId = event.getLevel().getId();
         User user = this.userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = this.levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        object.setUser(user);
-        object.setLevel(level);
-        return this.eventRepository.save(object);
+        List<Event> eventsList = this.eventRepository
+                .findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
+                        event.getDescription(), event.getLog(), event.getOrigin(), event.getDate(),
+                        event.getQuantity(), level.getDescription());
+        if (!eventsList.isEmpty()) {
+            throw new IllegalArgumentException("Evento já cadastrado");
+        }
+        event.setUser(user);
+        event.setLevel(level);
+        return save(event);
     }
 
     @Override
@@ -42,45 +60,40 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
     }
 
-    public List<Event> checkList(List<Event> eventsList) {
-        if (eventsList.isEmpty()) {
-            throw new IllegalArgumentException("Nenhum evento encontrado");
-        }
-        return eventsList;
-    }
-
-    @Override
-    public List<Event> findAllByDescription(String description, Pageable pageable) {
-        List<Event> eventsList = this.eventRepository.findAllByDescription(description, pageable).getContent();
-        return checkList(eventsList);
-    }
-
-    @Override
-    public List<Event> findAllByLog(String log, Pageable pageable) {
-        List<Event> eventsList = this.eventRepository.findAllByLog(log, pageable).getContent();
-        return checkList(eventsList);
-    }
-
-    @Override
-    public List<Event> findAllByOrigin(String origin, Pageable pageable) {
-        List<Event> eventsList = this.eventRepository.findAllByOrigin(origin, pageable).getContent();
-        return checkList(eventsList);
-    }
-
-    @Override
-    public List<Event> findAllByDate(String date, Pageable pageable) {
-        List<Event> eventsList = this.eventRepository.findAllByDate(date, pageable).getContent();
-        return checkList(eventsList);
-    }
-
-    @Override
-    public List<Event> findAllByQuantity(Integer quantity, Pageable pageable) {
-        List<Event> eventsList = this.eventRepository.findAllByQuantity(quantity, pageable).getContent();
-        return checkList(eventsList);
-    }
-
     @Override
     public List<Event> getAll(Pageable pageable) {
         return this.eventRepository.findAll(pageable).getContent();
     }
+
+    @Override
+    public List<Event> filter(String description, String origin, String date,
+                                   Integer quantity, String email, String level, Pageable pageable) {
+        LocalDate localDate = null;
+        if (date.length() == 10) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            localDate = LocalDate.parse(date, formatter);
+        }
+        if (localDate == null && quantity == null) {
+            return this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
+                    description, origin, email, level, pageable
+            ).getContent();
+        }
+        if (localDate != null && quantity == null) {
+            return this.eventRepository
+                    .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDate(
+                            description, origin, email, level, localDate, pageable
+            ).getContent();
+        }
+        if (localDate == null && quantity != null) {
+            return this.eventRepository
+                    .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantity(
+                            description, origin, email, level, quantity, pageable
+                    ).getContent();
+        }
+        return this.eventRepository
+                .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantityAndDate(
+                        description, origin, email, level, quantity, localDate, pageable
+                ).getContent();
+    }
+
 }
