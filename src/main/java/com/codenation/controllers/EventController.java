@@ -75,8 +75,7 @@ public class EventController {
             @PathVariable("month") String month,
             @PathVariable("year") String year,
             Pageable pageable){
-        String date = year + "-" + month + "-" + day;
-        List<Event> eventsList = eventService.findAllByDate(date, pageable);
+        List<Event> eventsList = eventService.findAllByDate(day, month, year, pageable);
         return ResponseEntity.status(HttpStatus.OK).body(eventsList
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
@@ -119,7 +118,7 @@ public class EventController {
         }
     }
 
-    @GetMapping("/all")
+    @GetMapping
     @ApiOperation(value = "Retorna todos os eventos")
     public ResponseEntity<List<EventDTO>> getAll(Pageable pageable){
         return ResponseEntity.status(HttpStatus.OK).body(eventService.getAll(pageable)

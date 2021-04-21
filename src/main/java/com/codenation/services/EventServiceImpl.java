@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -57,42 +58,67 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> findAllByDescription(String description, Pageable pageable) {
-        List<Event> eventsList = this.eventRepository.findAllByDescription(description, pageable).getContent();
+        if (description == null || description.isEmpty()) {
+            return this.eventRepository.findAll(pageable).getContent();
+        }
+        List<Event> eventsList = this.eventRepository.findAllByDescription(description, pageable)
+                .getContent();
         return checkList(eventsList);
     }
 
     @Override
     public List<Event> findAllByLog(String log, Pageable pageable) {
+        if (log == null || log.isEmpty()) {
+            return this.eventRepository.findAll(pageable).getContent();
+        }
         List<Event> eventsList = this.eventRepository.findAllByLog(log, pageable).getContent();
         return checkList(eventsList);
     }
 
     @Override
     public List<Event> findAllByOrigin(String origin, Pageable pageable) {
+        if (origin == null || origin.isEmpty()) {
+            return this.eventRepository.findAll(pageable).getContent();
+        }
         List<Event> eventsList = this.eventRepository.findAllByOrigin(origin, pageable).getContent();
         return checkList(eventsList);
     }
 
     @Override
-    public List<Event> findAllByDate(String date, Pageable pageable) {
-        List<Event> eventsList = this.eventRepository.findAllByDate(date, pageable).getContent();
+    public List<Event> findAllByDate(String day, String month, String year, Pageable pageable) {
+        String date = year + "-" + month + "-" + day;
+        if (date == null || date.isEmpty()) {
+            return this.eventRepository.findAll(pageable).getContent();
+        }
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localDate = LocalDate.parse(date, formatter);
+        List<Event> eventsList = this.eventRepository.findAllByDate(localDate, pageable).getContent();
         return checkList(eventsList);
     }
 
     @Override
     public List<Event> findAllByQuantity(Integer quantity, Pageable pageable) {
+        if (quantity == null) {
+            return this.eventRepository.findAll(pageable).getContent();
+        }
         List<Event> eventsList = this.eventRepository.findAllByQuantity(quantity, pageable).getContent();
         return checkList(eventsList);
     }
 
     @Override
     public List<Event> findAllByEmail(String email, Pageable pageable) {
+        if (email == null || email.isEmpty()) {
+            return this.eventRepository.findAll(pageable).getContent();
+        }
         List<Event> eventsList = this.eventRepository.findAllByUserEmail(email, pageable).getContent();
         return checkList(eventsList);
     }
 
     @Override
     public List<Event> findAllByLevel(String level, Pageable pageable) {
+        if (level == null || level.isEmpty()) {
+            return this.eventRepository.findAll(pageable).getContent();
+        }
         List<Event> eventsList = this.eventRepository.findAllByLevelDescription(level, pageable)
                 .getContent();
         return checkList(eventsList);
