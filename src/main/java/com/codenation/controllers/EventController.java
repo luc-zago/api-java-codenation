@@ -16,7 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,12 +66,12 @@ public class EventController {
     @GetMapping
     @ApiOperation(value = "Retorna todos os eventos")
     public ResponseEntity<List<EventDTO>> getAll(
-            @PathParam("description") String description,
-            @PathParam("origin") String origin,
-            @PathParam("date") String date,
-            @PathParam("quantity") Integer quantity,
-            @PathParam("email") String email,
-            @PathParam("level") String level,
+            @RequestParam(value = "description", required = false, defaultValue = "") String description,
+            @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
+            @RequestParam(value = "date", required = false, defaultValue = "") String date,
+            @RequestParam(value = "quantity", required = false) Integer quantity,
+            @RequestParam(value = "email", required = false, defaultValue = "") String email,
+            @RequestParam(value = "level", required = false, defaultValue = "") String level,
             Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.filter(description,
                 origin, date, quantity, email, level, pageable)

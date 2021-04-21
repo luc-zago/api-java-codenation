@@ -81,18 +81,6 @@ public class EventServiceImpl implements EventService {
         && level == null) {
             return getAll(pageable);
         }
-        if (description == null) {
-            description = "";
-        }
-        if (origin == null) {
-            origin = "";
-        }
-        if (email == null) {
-            email = "";
-        }
-        if (level == null) {
-            level = "";
-        }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate localDate = LocalDate.parse(date, formatter);
         if (localDate == null && quantity == null) {
