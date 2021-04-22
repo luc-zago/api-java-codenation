@@ -22,7 +22,7 @@ public class LevelServiceImpl implements LevelService {
     @Override
     public Level register(Level level) throws InstanceAlreadyExistsException {
         String description = level.getDescription();
-        Level checkLevel = this.levelRepository.findByDescription(description);
+        Level checkLevel = this.levelRepository.findByDescription(description).orElse(null);
         if (checkLevel == null) {
             return save(level);
         } else {

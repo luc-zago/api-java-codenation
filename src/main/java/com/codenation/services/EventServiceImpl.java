@@ -7,7 +7,7 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -66,34 +68,28 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> filter(String description, String origin, String date,
-                                   Integer quantity, String email, String level, Pageable pageable) {
-        LocalDate localDate = null;
-        if (date.length() == 10) {
+    public List<Event> filter(String description, String origin, String date, Integer quantity,
+                              String email, String level, Integer page, Integer size,
+                              String order, String sort,
+                              Pageable pageable) {
+        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
+        sort = sort.toLowerCase();
+        if (sort == "desc") {
+            pageable = PageRequest.of(page, size, Sort.by(order).descending());
+        }
+        List<Event> eventList = this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
+                description, origin, email, level);
+        if (date != null && date.length() == 10) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            localDate = LocalDate.parse(date, formatter);
+            LocalDate localDate = LocalDate.parse(date, formatter);
+            Stream<Event> eventStream = eventList.stream().filter(event -> event.getDate().isEqual(localDate));
+            eventList = eventStream.collect(Collectors.toList());
         }
-        if (localDate == null && quantity == null) {
-            return this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, email, level, pageable
-            ).getContent();
+        if (quantity != null) {
+            Stream<Event> eventStream = eventList.stream().filter(event -> event.getQuantity() == quantity);
+            eventList = eventStream.collect(Collectors.toList());
         }
-        if (localDate != null && quantity == null) {
-            return this.eventRepository
-                    .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDate(
-                            description, origin, email, level, localDate, pageable
-            ).getContent();
-        }
-        if (localDate == null && quantity != null) {
-            return this.eventRepository
-                    .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantity(
-                            description, origin, email, level, quantity, pageable
-                    ).getContent();
-        }
-        return this.eventRepository
-                .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantityAndDate(
-                        description, origin, email, level, quantity, localDate, pageable
-                ).getContent();
+        System.out.println(eventList.size());
+        return new PageImpl<Event>(eventList, pageable, eventList.size()).getContent();
     }
-
 }
