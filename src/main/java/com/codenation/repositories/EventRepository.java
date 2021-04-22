@@ -14,15 +14,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     Page<Event> findAll(Pageable pageable);
     List<Event> findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
             String description, String origin, String email, String levelDescription);
-    Page<Event> findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantity(
-            String description, String origin, String email, String levelDescription, Integer quantity,
-            Pageable pageable);
-    Page<Event> findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDate(
-            String description, String origin, String email, String levelDescription, LocalDate date,
-            Pageable pageable);
-    Page<Event> findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantityAndDate(
-            String description, String origin, String email, String levelDescription, Integer quantity,
-            LocalDate date, Pageable pageable);
     List<Event> findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
             String desc, String log, String origin, LocalDate date, Integer qtt, String  level);
 }

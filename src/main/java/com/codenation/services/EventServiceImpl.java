@@ -91,35 +91,5 @@ public class EventServiceImpl implements EventService {
         }
         System.out.println(eventList.size());
         return new PageImpl<Event>(eventList, pageable, eventList.size()).getContent();
-        /*
-        User exampleUser = this.userRepository.findByEmail(email).orElse(null);
-        Level exampleLevel = this.levelRepository.findByDescription(level).orElse(null);
-        Event eventExample = new Event(null, description, null, origin,
-                localDate, quantity, exampleUser, exampleLevel);
-        // return this.eventRepository.findAll(Sort.by(sort));
-        // return this.eventRepository.findAll(Example.of(eventExample), pageable).getContent();
-        /*
-        if (localDate == null && quantity == null) {
-            return this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, email, level, pageable
-            ).getContent();
-        }
-        if (localDate != null && quantity == null) {
-            return this.eventRepository
-                    .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndDate(
-                            description, origin, email, level, localDate, pageable
-            ).getContent();
-        }
-        if (localDate == null && quantity != null) {
-            return this.eventRepository
-                    .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantity(
-                            description, origin, email, level, quantity, pageable
-                    ).getContent();
-        }
-        return this.eventRepository
-                .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantityAndDate(
-                        description, origin, email, level, quantity, localDate, pageable
-                ).getContent(); */
     }
-
 }
