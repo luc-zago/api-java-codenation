@@ -10,12 +10,14 @@ import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,14 +71,14 @@ public class EventController {
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "description", required = false, defaultValue = "") String description,
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
-            @RequestParam(value = "date", required = false) String date,
+            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam(value = "quantity", required = false) Integer quantity,
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
             @RequestParam(value = "level", required = false, defaultValue = "") String level,
             @RequestParam(value = "order", required = false, defaultValue = "id") String order,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
             Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.filter(description,
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.filterAndSort(description,
                 origin, date, quantity, email, level, page, size, order, sort, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
