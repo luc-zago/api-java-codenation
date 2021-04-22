@@ -72,7 +72,7 @@ public class EventServiceImpl implements EventService {
     public List<Event> getAll(Pageable pageable) {
         return this.eventRepository.findAll(pageable).getContent();
     }
-
+/*
     private List<Event> sortEvents(List<Event> events, String order, String sort) {
         switch (order) {
             case "description": {
@@ -128,18 +128,24 @@ public class EventServiceImpl implements EventService {
                     return events.stream().sorted(Comparator.comparing(Event::getLevel).reversed())
                             .collect(Collectors.toList());
                 }
-            } */
+            }
             default: {
                 return events;
             }
         }
-    }
+    } */
 
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
                                      String email, String level, Integer page, Integer size,
                                      String order, String sort,
                                      Pageable pageable) {
+        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
+        sort.toUpperCase();
+        System.out.println(sort);
+        if (sort.equals("DESC")) {
+            pageable = PageRequest.of(page, size, Sort.by(order).descending());
+        }
         List<Event> eventList = new ArrayList<>();
         if (date == null && quantity == null) {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
@@ -155,6 +161,6 @@ public class EventServiceImpl implements EventService {
                     description, origin, date, quantity, email, level, pageable).getContent());
         }
 
-        return sortEvents(eventList, order, sort);
+        return eventList;
     }
 }
