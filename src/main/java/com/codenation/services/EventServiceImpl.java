@@ -12,11 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -67,29 +67,70 @@ public class EventServiceImpl implements EventService {
         return this.eventRepository.findAll(pageable).getContent();
     }
 
+    private List<Event> sortEvents(List<Event> events, String order, String sort) {
+        switch (order) {
+            case "description": {
+                if (sort.equals("ASC")) {
+                    return events.stream().sorted(Comparator.comparing(Event::getDescription))
+                            .collect(Collectors.toList());
+                } else {
+                    return events.stream().sorted(Comparator.comparing(Event::getDescription).reversed())
+                            .collect(Collectors.toList());
+                }
+            }
+            case "origin": {
+                if (sort.equals("ASC")) {
+                    return events.stream().sorted(Comparator.comparing(Event::getOrigin))
+                            .collect(Collectors.toList());
+                } else {
+                    return events.stream().sorted(Comparator.comparing(Event::getOrigin).reversed())
+                            .collect(Collectors.toList());
+                }
+            }
+            case "date": {
+                if (sort.equals("ASC")) {
+                    return events.stream().sorted(Comparator.comparing(Event::getDate))
+                            .collect(Collectors.toList());
+                } else {
+                    return events.stream().sorted(Comparator.comparing(Event::getDate).reversed())
+                            .collect(Collectors.toList());
+                }
+            }
+            case "quantity": {
+                if (sort.equals("ASC")) {
+                    return events.stream().sorted(Comparator.comparingInt(Event::getQuantity))
+                            .collect(Collectors.toList());
+                } else {
+                    return events.stream().sorted(Comparator.comparingInt(Event::getQuantity).reversed())
+                            .collect(Collectors.toList());
+                }
+            }
+            default: {
+                return events;
+            }
+        }
+    }
+
     @Override
-    public List<Event> filter(String description, String origin, String date, Integer quantity,
-                              String email, String level, Integer page, Integer size,
-                              String order, String sort,
-                              Pageable pageable) {
-        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
-        sort = sort.toLowerCase();
-        if (sort == "desc") {
-            pageable = PageRequest.of(page, size, Sort.by(order).descending());
+    public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
+                                     String email, String level, Integer page, Integer size,
+                                     String order, String sort,
+                                     Pageable pageable) {
+        List<Event> eventList = new ArrayList<>();
+        if (date == null && quantity == null) {
+            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
+                            description, origin, email, level));
+        } else if (date == null) {
+            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
+                    description, origin, quantity, email, level));
+        } else if (quantity == null) {
+            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
+                    description, origin, date, email, level));
+        } else {
+            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
+                    description, origin, date, quantity, email, level));
         }
-        List<Event> eventList = this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                description, origin, email, level);
-        if (date != null && date.length() == 10) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = LocalDate.parse(date, formatter);
-            Stream<Event> eventStream = eventList.stream().filter(event -> event.getDate().isEqual(localDate));
-            eventList = eventStream.collect(Collectors.toList());
-        }
-        if (quantity != null) {
-            Stream<Event> eventStream = eventList.stream().filter(event -> event.getQuantity() == quantity);
-            eventList = eventStream.collect(Collectors.toList());
-        }
-        System.out.println(eventList.size());
-        return new PageImpl<Event>(eventList, pageable, eventList.size()).getContent();
+
+        return sortEvents(eventList, order, sort);
     }
 }
