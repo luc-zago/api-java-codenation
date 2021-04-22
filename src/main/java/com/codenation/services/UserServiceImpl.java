@@ -1,5 +1,6 @@
 package com.codenation.services;
 
+import com.codenation.enums.Authority;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -9,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
             throw new InstanceAlreadyExistsException("Usuário já cadastrado");
         } else {
             user.setPassword(this.passwordEncoder().encode(user.getPassword()));
-
+            user.setAuthority(Authority.USER);
             return this.save(user);
         }
     }
