@@ -42,7 +42,6 @@ public class UserController {
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
     public ResponseEntity<UserDTO> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         User userCreated = userService.register(user);
         if (userCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
