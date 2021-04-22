@@ -72,68 +72,6 @@ public class EventServiceImpl implements EventService {
     public List<Event> getAll(Pageable pageable) {
         return this.eventRepository.findAll(pageable).getContent();
     }
-/*
-    private List<Event> sortEvents(List<Event> events, String order, String sort) {
-        switch (order) {
-            case "description": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getDescription))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getDescription).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            case "origin": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getOrigin))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getOrigin).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            case "date": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getDate))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getDate).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            case "quantity": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparingInt(Event::getQuantity))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparingInt(Event::getQuantity).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            /*case "user": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getUser))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getUser).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            case "level": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getLevel))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getLevel).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            default: {
-                return events;
-            }
-        }
-    } */
 
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
