@@ -79,11 +79,10 @@ public class EventServiceImpl implements EventService {
         }
         List<Event> eventList = this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
                 description, origin, email, level);
-        System.out.println(eventList.size());
-        if (date.length() == 10) {
+        if (date != null && date.length() == 10) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             LocalDate localDate = LocalDate.parse(date, formatter);
-            Stream<Event> eventStream = eventList.stream().filter(event -> event.getDate() == localDate);
+            Stream<Event> eventStream = eventList.stream().filter(event -> event.getDate().isEqual(localDate));
             eventList = eventStream.collect(Collectors.toList());
         }
         if (quantity != null) {
