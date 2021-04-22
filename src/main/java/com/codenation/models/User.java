@@ -1,10 +1,10 @@
 package com.codenation.models;
 
+import com.codenation.enums.Authority;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -37,5 +37,8 @@ public class User {
     @Column(length = 100)
     @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
     private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
 }
