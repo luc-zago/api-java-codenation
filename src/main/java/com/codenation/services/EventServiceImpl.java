@@ -111,6 +111,24 @@ public class EventServiceImpl implements EventService {
                             .collect(Collectors.toList());
                 }
             }
+            /*case "user": {
+                if (sort.equals("ASC")) {
+                    return events.stream().sorted(Comparator.comparing(Event::getUser))
+                            .collect(Collectors.toList());
+                } else {
+                    return events.stream().sorted(Comparator.comparing(Event::getUser).reversed())
+                            .collect(Collectors.toList());
+                }
+            }
+            case "level": {
+                if (sort.equals("ASC")) {
+                    return events.stream().sorted(Comparator.comparing(Event::getLevel))
+                            .collect(Collectors.toList());
+                } else {
+                    return events.stream().sorted(Comparator.comparing(Event::getLevel).reversed())
+                            .collect(Collectors.toList());
+                }
+            } */
             default: {
                 return events;
             }
@@ -125,16 +143,16 @@ public class EventServiceImpl implements EventService {
         List<Event> eventList = new ArrayList<>();
         if (date == null && quantity == null) {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                            description, origin, email, level));
+                            description, origin, email, level, pageable).getContent());
         } else if (date == null) {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, quantity, email, level));
+                    description, origin, quantity, email, level, pageable).getContent());
         } else if (quantity == null) {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, email, level));
+                    description, origin, date, email, level, pageable).getContent());
         } else {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, quantity, email, level));
+                    description, origin, date, quantity, email, level, pageable).getContent());
         }
 
         return sortEvents(eventList, order, sort);
