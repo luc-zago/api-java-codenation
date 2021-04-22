@@ -141,8 +141,7 @@ public class EventServiceImpl implements EventService {
                                      String order, String sort,
                                      Pageable pageable) {
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
-        sort.toUpperCase();
-        System.out.println(sort);
+        sort = sort.toUpperCase();
         if (sort.equals("DESC")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
