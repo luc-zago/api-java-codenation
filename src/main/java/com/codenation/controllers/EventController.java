@@ -75,7 +75,7 @@ public class EventController {
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
             @RequestParam(value = "level", required = false, defaultValue = "") String level,
             @RequestParam(value = "order", required = false, defaultValue = "id") String order,
-            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sort,
+            @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
             Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.filter(description,
                 origin, date, quantity, email, level, page, size, order, sort, pageable)

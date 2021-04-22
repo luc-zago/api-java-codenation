@@ -7,10 +7,7 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +15,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @AllArgsConstructor
@@ -73,17 +72,33 @@ public class EventServiceImpl implements EventService {
                               String email, String level, Integer page, Integer size,
                               String order, String sort,
                               Pageable pageable) {
-        pageable = PageRequest.of(page, size, Sort.Direction.valueOf(order), sort);
-        LocalDate localDate = null;
+        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
+        sort = sort.toLowerCase();
+        if (sort == "desc") {
+            pageable = PageRequest.of(page, size, Sort.by(order).descending());
+        }
+        List<Event> eventList = this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
+                description, origin, email, level);
+        System.out.println(eventList.size());
         if (date.length() == 10) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            localDate = LocalDate.parse(date, formatter);
+            LocalDate localDate = LocalDate.parse(date, formatter);
+            Stream<Event> eventStream = eventList.stream().filter(event -> event.getDate() == localDate);
+            eventList = eventStream.collect(Collectors.toList());
         }
+        if (quantity != null) {
+            Stream<Event> eventStream = eventList.stream().filter(event -> event.getQuantity() == quantity);
+            eventList = eventStream.collect(Collectors.toList());
+        }
+        System.out.println(eventList.size());
+        return new PageImpl<Event>(eventList, pageable, eventList.size()).getContent();
+        /*
         User exampleUser = this.userRepository.findByEmail(email).orElse(null);
         Level exampleLevel = this.levelRepository.findByDescription(level).orElse(null);
         Event eventExample = new Event(null, description, null, origin,
                 localDate, quantity, exampleUser, exampleLevel);
-        return this.eventRepository.findAll(Example.of(eventExample), pageable).getContent();
+        // return this.eventRepository.findAll(Sort.by(sort));
+        // return this.eventRepository.findAll(Example.of(eventExample), pageable).getContent();
         /*
         if (localDate == null && quantity == null) {
             return this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
