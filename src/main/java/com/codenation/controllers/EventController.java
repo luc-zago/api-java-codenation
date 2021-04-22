@@ -54,8 +54,7 @@ public class EventController {
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
     public ResponseEntity<CreateEventDTO> register(@RequestBody @Valid Event event) {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Event eventCreated = eventService.register(event, principal);
+        Event eventCreated = eventService.register(event);
         if (eventCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         } else {

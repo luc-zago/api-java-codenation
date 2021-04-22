@@ -8,6 +8,7 @@ import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -26,21 +27,26 @@ public class EventServiceImpl implements EventService {
     final private UserRepository userRepository;
     final private LevelRepository levelRepository;
 
-    @Override
-    public Event save(Event event) {
-        return this.eventRepository.save(event);
-    }
-
-    public Event register(Event event, Object principal) {
+    private String getLoggedUserEmail() {
         String email;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {
             email = ((UserDetails)principal).getUsername();
         } else {
             email = principal.toString();
         }
+        return email;
+    }
+
+    @Override
+    public Event save(Event event) {
+        return this.eventRepository.save(event);
+    }
+
+    public Event register(Event event) {
         Long levelId = event.getLevel().getId();
-        User user = this.userRepository.findByEmail(email)
+        User user = this.userRepository.findByEmail(getLoggedUserEmail())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = this.levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
