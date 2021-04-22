@@ -7,7 +7,9 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -66,8 +68,11 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> filter(String description, String origin, String date,
-                                   Integer quantity, String email, String level, Pageable pageable) {
+    public List<Event> filter(String description, String origin, String date, Integer quantity,
+                              String email, String level, Integer page, Integer size,
+                              String order, String sort,
+                              Pageable pageable) {
+        pageable = PageRequest.of(page, size, Sort.Direction.valueOf(order), sort);
         LocalDate localDate = null;
         if (date.length() == 10) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

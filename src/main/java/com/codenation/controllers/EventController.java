@@ -66,17 +66,19 @@ public class EventController {
     @GetMapping
     @ApiOperation(value = "Retorna todos os eventos")
     public ResponseEntity<List<EventDTO>> getAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "20") Integer size,
             @RequestParam(value = "description", required = false, defaultValue = "") String description,
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
             @RequestParam(value = "date", required = false) String date,
             @RequestParam(value = "quantity", required = false) Integer quantity,
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
             @RequestParam(value = "level", required = false, defaultValue = "") String level,
-            @RequestParam(value = "order", required = false, defaultValue = "") String order,
-            @RequestParam(value = "sort", required = false, defaultValue = "") String sort,
+            @RequestParam(value = "order", required = false, defaultValue = "id") String order,
+            @RequestParam(value = "sort", required = false, defaultValue = "ASC") String sort,
             Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.filter(description,
-                origin, date, quantity, email, level, pageable)
+                origin, date, quantity, email, level, page, size, order, sort, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
 
