@@ -7,6 +7,7 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -78,6 +79,12 @@ public class EventServiceImpl implements EventService {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             localDate = LocalDate.parse(date, formatter);
         }
+        User exampleUser = this.userRepository.findByEmail(email).orElse(null);
+        Level exampleLevel = this.levelRepository.findByDescription(level).orElse(null);
+        Event eventExample = new Event(null, description, null, origin,
+                localDate, quantity, exampleUser, exampleLevel);
+        return this.eventRepository.findAll(Example.of(eventExample), pageable).getContent();
+        /*
         if (localDate == null && quantity == null) {
             return this.eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
                     description, origin, email, level, pageable
@@ -98,7 +105,7 @@ public class EventServiceImpl implements EventService {
         return this.eventRepository
                 .findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContainsAndQuantityAndDate(
                         description, origin, email, level, quantity, localDate, pageable
-                ).getContent();
+                ).getContent(); */
     }
 
 }
