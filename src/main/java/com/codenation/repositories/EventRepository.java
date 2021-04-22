@@ -17,16 +17,19 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
             String desc, String log, String origin, LocalDate date, Integer qtt, String  level);
 
-    List<Event> findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-            String description, String origin, String email, String levelDescription);
+    Page<Event> findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
+            String description, String origin, String email, String levelDescription, Pageable pageable);
 
-    List<Event> findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
-            String description, String origin, LocalDate date, String email, String levelDescription);
+    Page<Event> findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
+            String description, String origin, LocalDate date, String email, String levelDescription,
+            Pageable pageable);
 
-    List<Event> findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-            String description, String origin, Integer quantity, String email, String levelDescription);
+    Page<Event> findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
+            String description, String origin, Integer quantity, String email, String levelDescription,
+            Pageable pageable);
 
-    List<Event> findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-            String description, String origin, LocalDate date, Integer quantity, String email, String levelDescription);
+    Page<Event> findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
+            String description, String origin, LocalDate date, Integer quantity, String email,
+            String levelDescription, Pageable pageable);
 
 }

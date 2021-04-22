@@ -73,70 +73,31 @@ public class EventServiceImpl implements EventService {
         return this.eventRepository.findAll(pageable).getContent();
     }
 
-    private List<Event> sortEvents(List<Event> events, String order, String sort) {
-        switch (order) {
-            case "description": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getDescription))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getDescription).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            case "origin": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getOrigin))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getOrigin).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            case "date": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparing(Event::getDate))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparing(Event::getDate).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            case "quantity": {
-                if (sort.equals("ASC")) {
-                    return events.stream().sorted(Comparator.comparingInt(Event::getQuantity))
-                            .collect(Collectors.toList());
-                } else {
-                    return events.stream().sorted(Comparator.comparingInt(Event::getQuantity).reversed())
-                            .collect(Collectors.toList());
-                }
-            }
-            default: {
-                return events;
-            }
-        }
-    }
-
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
                                      String email, String level, Integer page, Integer size,
                                      String order, String sort,
                                      Pageable pageable) {
+        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
+        sort = sort.toUpperCase();
+        if (sort.equals("DESC")) {
+            pageable = PageRequest.of(page, size, Sort.by(order).descending());
+        }
         List<Event> eventList = new ArrayList<>();
         if (date == null && quantity == null) {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                            description, origin, email, level));
+                            description, origin, email, level, pageable).getContent());
         } else if (date == null) {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, quantity, email, level));
+                    description, origin, quantity, email, level, pageable).getContent());
         } else if (quantity == null) {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, email, level));
+                    description, origin, date, email, level, pageable).getContent());
         } else {
             eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, quantity, email, level));
+                    description, origin, date, quantity, email, level, pageable).getContent());
         }
 
-        return sortEvents(eventList, order, sort);
+        return eventList;
     }
 }
