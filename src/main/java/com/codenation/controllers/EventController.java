@@ -78,8 +78,8 @@ public class EventController {
             @RequestParam(value = "order", required = false, defaultValue = "id") String order,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
             Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.teste(description,
-                origin, date, quantity, email, level, order, sort, pageable)
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.filterAndSort(description,
+                origin, date, quantity, email, level, page, size, order, sort, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
 
