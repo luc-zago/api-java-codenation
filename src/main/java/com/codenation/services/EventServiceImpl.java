@@ -4,7 +4,6 @@ import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.predicates.EventSpecification;
-import com.codenation.predicates.FilterAndSort;
 import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
@@ -14,13 +13,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import javax.management.Query;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -107,8 +103,6 @@ public class EventServiceImpl implements EventService {
     public List<Event> teste(String description, String origin, LocalDate date, Integer quantity,
                              String email, String level, String order, String sort,
                              Pageable pageable) {
-        FilterAndSort filterAndSort = new FilterAndSort(
-                description, origin, date, quantity, email, level, order, sort);
         EventSpecification spec = new EventSpecification(
                 description, origin, date, quantity, email, level, order, sort);
         return this.eventRepository.findAll(spec, pageable).getContent();
