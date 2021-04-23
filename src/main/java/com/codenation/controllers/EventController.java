@@ -73,13 +73,13 @@ public class EventController {
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam(value = "quantity", required = false) Integer quantity,
-            @RequestParam(value = "email", required = false, defaultValue = "") String email,
+            @RequestParam(value = "user", required = false, defaultValue = "") String email,
             @RequestParam(value = "level", required = false, defaultValue = "") String level,
             @RequestParam(value = "order", required = false, defaultValue = "id") String order,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
             Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(eventService.filterAndSort(description,
-                origin, date, quantity, email, level, page, size, order, sort, pageable)
+        return ResponseEntity.status(HttpStatus.OK).body(eventService.teste(description,
+                origin, date, quantity, email, level, order, sort, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
 
