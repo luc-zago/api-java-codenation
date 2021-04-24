@@ -104,11 +104,4 @@ public class EventServiceImpl implements EventService {
         return eventList;
     }
 
-    public List<Event> teste(String description, String origin, LocalDate date, Integer quantity,
-                                     String email, String level, Integer page, Integer size,
-                                     String order, String sort,
-                                     Pageable pageable) {
-        return this.eventRepository.findAll();
-    }
-
 }
