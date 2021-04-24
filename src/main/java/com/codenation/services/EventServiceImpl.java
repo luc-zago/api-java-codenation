@@ -76,6 +76,11 @@ public class EventServiceImpl implements EventService {
                                      String email, String level, Integer page, Integer size,
                                      String order, String sort,
                                      Pageable pageable) {
+        if (order.equals("level")) {
+            order = "level.description";
+        } else if (order.equals("user")) {
+            order = "user.email";
+        }
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
         sort = sort.toUpperCase();
         if (sort.equals("DESC")) {
