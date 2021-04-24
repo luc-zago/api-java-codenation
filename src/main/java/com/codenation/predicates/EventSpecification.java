@@ -66,7 +66,7 @@ public class EventSpecification implements Specification<Event> {
 
         if (sort.equals("desc")) {
             query.orderBy(builder.desc(root.get(order)));
-        } */
+        }
 
         return builder.and(predicateList.toArray(new Predicate[predicateList.size()]));
     }
