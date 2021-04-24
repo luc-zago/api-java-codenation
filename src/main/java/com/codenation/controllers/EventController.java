@@ -73,7 +73,7 @@ public class EventController {
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @RequestParam(value = "quantity", required = false) Integer quantity,
-            @RequestParam(value = "email", required = false, defaultValue = "") String email,
+            @RequestParam(value = "user", required = false, defaultValue = "") String email,
             @RequestParam(value = "level", required = false, defaultValue = "") String level,
             @RequestParam(value = "order", required = false, defaultValue = "id") String order,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
