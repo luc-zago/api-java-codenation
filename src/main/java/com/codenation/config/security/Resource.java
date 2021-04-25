@@ -19,6 +19,7 @@ public class Resource extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/event/{id}").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/level/{id}").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/level/{id}").hasAuthority(Authority.ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority(Authority.ADMIN.name())
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",

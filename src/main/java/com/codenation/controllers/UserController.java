@@ -2,6 +2,7 @@ package com.codenation.controllers;
 
 import com.codenation.dtos.UserDTO;
 import com.codenation.dtos.UserDTOWithId;
+import com.codenation.models.Level;
 import com.codenation.services.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -55,5 +56,12 @@ public class UserController {
     public ResponseEntity<List<UserDTOWithId>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll()
             .stream().map(this::toUserWithId).collect(Collectors.toList()));
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Deleta um usuário por id")
+    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+        userService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Usuário apagado com sucesso!");
     }
 }

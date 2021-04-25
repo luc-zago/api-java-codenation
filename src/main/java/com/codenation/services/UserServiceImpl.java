@@ -1,6 +1,7 @@
 package com.codenation.services;
 
 import com.codenation.enums.Authority;
+import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -43,5 +45,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getAll() {
         return this.userRepository.findAll();
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        userRepository.delete(user);
     }
 }
