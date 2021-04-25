@@ -71,16 +71,19 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
-                                     String email, String level, String order, String sort,
-                                     Pageable pageable) {
+                                     String email, String level, String order, String sort, Integer page,
+                                     Integer size, Pageable pageable) {
         sort = sort.toUpperCase();
-        /*if (sort.equals("DESC")) {
-            List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email,
-                    level, order, sort, pageable).getContent();
-            return teste;
-        } */
-        Date sqlDate = Date.valueOf(date);
-        List<Event> teste = eventRepository.filterAndSort(description, origin, sqlDate, quantity, email, level, pageable).getContent();
+        if (order.equals("user")) {
+            order = "user.email";
+        } else if (order.equals("level")) {
+            order = "level.description";
+        }
+        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
+        if (sort.equals("DESC")) {
+            pageable = PageRequest.of(page, size, Sort.by(order).descending());
+        }
+        List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email, level, pageable).getContent();
         return teste;
     }
 

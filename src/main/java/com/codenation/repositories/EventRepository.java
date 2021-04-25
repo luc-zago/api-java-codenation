@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -44,7 +43,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "AND e.level.description LIKE CONCAT ('%', :level, '%') ")
     Page<Event> filterAndSort(@Param("description") String description,
                               @Param("origin") String origin,
-                              @Param("date") Date date,
+                              @Param("date") LocalDate date,
                               @Param("quantity") Integer quantity,
                               @Param("email") String email,
                               @Param("level") String level,
