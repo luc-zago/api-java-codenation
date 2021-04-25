@@ -1,11 +1,14 @@
 package com.codenation.services;
 
+import com.codenation.enums.SearchOperation;
 import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.models.User;
+import com.codenation.utils.EventSpecification;
 import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
+import com.codenation.utils.SearchCriteria;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,7 +16,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -73,35 +75,29 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
-                                     String email, String level, Integer page, Integer size,
-                                     String order, String sort,
-                                     Pageable pageable) {
-        if (order.equals("level")) {
-            order = "level.description";
-        } else if (order.equals("user")) {
+                                     String email, String level, String order, String sort, Integer page,
+                                     Integer size, Pageable pageable) {
+        EventSpecification filter = new EventSpecification();
+        filter.add(new SearchCriteria("description", null, description, SearchOperation.LIKE));
+        filter.add(new SearchCriteria("origin", null, origin, SearchOperation.LIKE));
+        filter.add(new SearchCriteria("user", "email", email, SearchOperation.LIKE));
+        filter.add(new SearchCriteria("level", "description", level, SearchOperation.LIKE));
+        if (date != null) {
+            filter.add(new SearchCriteria("date", null, date, SearchOperation.EQUAL));
+        }
+        if (quantity != null) {
+            filter.add(new SearchCriteria("quantity", null, quantity, SearchOperation.EQUAL));
+        }
+        if (order.equals("user")) {
             order = "user.email";
+        } else if (order.equals("level")) {
+            order = "level.description";
         }
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
         sort = sort.toUpperCase();
         if (sort.equals("DESC")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
-        List<Event> eventList = new ArrayList<>();
-        if (date == null && quantity == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                            description, origin, email, level, pageable).getContent());
-        } else if (date == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, quantity, email, level, pageable).getContent());
-        } else if (quantity == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, email, level, pageable).getContent());
-        } else {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, quantity, email, level, pageable).getContent());
-        }
-
-        return eventList;
+        return this.eventRepository.findAll(filter, pageable).getContent();
     }
-
 }
