@@ -1,5 +1,6 @@
 package com.codenation.config.security;
 
+import com.codenation.enums.Authority;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import com.codenation.services.LoginServiceImpl;
@@ -43,6 +44,7 @@ public class Web extends WebSecurityConfigurerAdapter {
                     .email(USER_EMAIL)
                     .firstname(FIRST_NAME)
                     .lastname(LAST_NAME)
+                    .authority(Authority.ADMIN)
                     .password(passwordEncoder().encode(USER_PASSWORD))
                     .build());
         }

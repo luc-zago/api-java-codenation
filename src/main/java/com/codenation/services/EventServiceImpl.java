@@ -3,7 +3,6 @@ package com.codenation.services;
 import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.models.User;
-import com.codenation.predicates.EventSpecification;
 import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
@@ -74,8 +73,8 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
-                             String email, String level, String order, String sort, Integer page,
-                             Integer size, Pageable pageable) {
+                                     String email, String level, String order, String sort, Integer page,
+                                     Integer size, Pageable pageable) {
         EventSpecification spec = new EventSpecification(
                 description, origin, date, quantity, email, level);
 
