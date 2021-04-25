@@ -91,10 +91,10 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Deleta um evento por id")
-    public ResponseEntity<EventDTOWithLog> updateById(@PathVariable("id") Long id) {
+    @ApiOperation(value = "Atualiza um evento por id")
+    public ResponseEntity<Event> updateById(@PathVariable("id") Long id) {
         Event event = eventService.updateById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(event));
+        return ResponseEntity.status(HttpStatus.OK).body(event);
     }
 
 }

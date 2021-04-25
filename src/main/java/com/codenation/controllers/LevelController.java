@@ -1,5 +1,7 @@
 package com.codenation.controllers;
 
+import com.codenation.dtos.EventDTOWithLog;
+import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.services.LevelServiceImpl;
@@ -38,5 +40,19 @@ public class LevelController {
         } else {
             return ResponseEntity.status(HttpStatus.CREATED).body(levelCreated);
         }
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Deleta um level por id")
+    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+        levelService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Level apagado com sucesso!");
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Atualiza um level por id")
+    public ResponseEntity<Level> updateById(@PathVariable("id") Long id) {
+        Level level = levelService.updateById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(level);
     }
 }
