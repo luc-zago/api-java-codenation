@@ -12,6 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -77,7 +79,8 @@ public class EventServiceImpl implements EventService {
                     level, order, sort, pageable).getContent();
             return teste;
         } */
-        List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email, level, pageable).getContent();
+        Date sqlDate = Date.valueOf(date);
+        List<Event> teste = eventRepository.filterAndSort(description, origin, sqlDate, quantity, email, level, pageable).getContent();
         return teste;
     }
 

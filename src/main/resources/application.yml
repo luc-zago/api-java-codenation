@@ -11,6 +11,11 @@ spring:
     password: ${PASSWORD:204615}
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/error_manager}
 
+logging:
+  level:
+    org.hibernate.search.massindexing: INFO
+    org.hibernate.search.query: TRACE
+
 authorization:
   email: ${USER_EMAIL:admin@admin.com}
   firstname: ${FIRST_NAME:Administrador}

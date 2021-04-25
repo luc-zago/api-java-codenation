@@ -17,7 +17,7 @@ public class EventDTOWithLog {
     private String origin;
     private LocalDate date;
     private Integer quantity;
-    private String user;
-    private String level;
+    private String userEmail;
+    private String levelDescription;
 
 }

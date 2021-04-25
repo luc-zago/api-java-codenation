@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -34,17 +35,16 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             String description, String origin, LocalDate date, Integer quantity, String email,
             String levelDescription, Pageable pageable);
 
-    @Query(value = "SELECT * FROM EVENTS AS e WHERE " +
-            "e.description LIKE %:description% " +
-            "AND e.origin LIKE %:origin% " +
-            "AND (:date IS NULL OR e.date = TO_DATE(TO_CHAR(:date))) " +
+    @Query(value = "SELECT e FROM Event AS e WHERE " +
+            "e.description LIKE CONCAT('%', :description, '%') " +
+            "AND e.origin LIKE CONCAT('%', :origin, '%') " +
+            "AND (:date IS NULL OR e.date = :date) " +
             "AND (:quantity IS NULL OR e.quantity = :quantity) " +
-            "AND e.user.email LIKE %:email% " +
-            "AND e.level.description LIKE %:level% ",
-            nativeQuery = true)
+            "AND e.user.email LIKE CONCAT ('%', :email, '%') " +
+            "AND e.level.description LIKE CONCAT ('%', :level, '%') ")
     Page<Event> filterAndSort(@Param("description") String description,
                               @Param("origin") String origin,
-                              @Param("date") LocalDate date,
+                              @Param("date") Date date,
                               @Param("quantity") Integer quantity,
                               @Param("email") String email,
                               @Param("level") String level,

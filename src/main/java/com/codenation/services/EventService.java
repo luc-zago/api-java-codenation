@@ -11,7 +11,7 @@ public interface EventService {
     Event findById(Long id);
 
     List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
-                                     String email, String level, String order, String sort,
-                                     Pageable pageable);
+                              String email, String level, String order, String sort,
+                              Pageable pageable);
 
 }

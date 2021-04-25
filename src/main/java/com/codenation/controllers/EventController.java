@@ -8,6 +8,7 @@ import com.codenation.services.EventServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.bouncycastle.util.Times;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +69,7 @@ public class EventController {
     public ResponseEntity<List<EventDTO>> getAll(
             @RequestParam(value = "description", required = false, defaultValue = "") String description,
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
-            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @RequestParam(value = "date", required = false) @DateTimeFormat("yyyy-MM-dd") LocalDate date,
             @RequestParam(value = "quantity", required = false) Integer quantity,
             @RequestParam(value = "user", required = false, defaultValue = "") String email,
             @RequestParam(value = "level", required = false, defaultValue = "") String level,
