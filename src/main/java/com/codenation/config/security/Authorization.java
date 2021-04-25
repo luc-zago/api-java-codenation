@@ -1,6 +1,6 @@
 package com.codenation.config.security;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -16,20 +16,24 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 @Configuration
 @EnableAuthorizationServer
 @PropertySource("classpath:application.yml")
-@AllArgsConstructor
 public class Authorization extends AuthorizationServerConfigurerAdapter {
     @Value("${authorization.client.id}")
-    private final String CLIENT_ID;
+    private String CLIENT_ID;
     @Value("${authorization.client.secret}")
-    private final String CLIENT_SECRET;
+    private String CLIENT_SECRET;
     @Value("${authorization.client.grant-types}")
-    private final String[] CLIENT_GRANT_TYPES;
+    private String[] CLIENT_GRANT_TYPES;
     @Value("${authorization.client.scopes}")
-    private final String[] CLIENT_SCOPES;
+    private String[] CLIENT_SCOPES;
 
     // libera acesso as requisições do oauth2 /token_key, /check_token
 
     private final AuthenticationManager authenticationManager;
+
+    @Autowired
+    public Authorization(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) {

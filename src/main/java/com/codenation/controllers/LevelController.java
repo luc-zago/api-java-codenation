@@ -24,7 +24,7 @@ public class LevelController {
     @GetMapping
     @ApiOperation(value = "Retorna todos os tipos de level")
     public ResponseEntity<List<Level>> levels() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.levelService.getAll());
+        return ResponseEntity.status(HttpStatus.OK).body(levelService.getAll());
     }
 
     @PostMapping

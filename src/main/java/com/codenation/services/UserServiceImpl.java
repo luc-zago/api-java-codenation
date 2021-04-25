@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) throws InstanceAlreadyExistsException {
-        Optional<User> checkUser = this.userRepository.findByEmail(user.getEmail());
+        Optional<User> checkUser = userRepository.findByEmail(user.getEmail());
 
         if (checkUser.isPresent()) {
             throw new InstanceAlreadyExistsException("Usuário já cadastrado");
@@ -41,6 +41,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAll() {
-        return this.userRepository.findAll();
+        return userRepository.findAll();
     }
 }

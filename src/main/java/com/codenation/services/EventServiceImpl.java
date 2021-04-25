@@ -45,11 +45,11 @@ public class EventServiceImpl implements EventService {
 
     public Event register(Event event) {
         Long levelId = event.getLevel().getId();
-        User user = this.userRepository.findByEmail(getLoggedUserEmail())
+        User user = userRepository.findByEmail(getLoggedUserEmail())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        Level level = this.levelRepository.findById(levelId)
+        Level level = levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        List<Event> eventsList = this.eventRepository
+        List<Event> eventsList = eventRepository
                 .findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
                         event.getDescription(), event.getLog(), event.getOrigin(), event.getDate(),
                         event.getQuantity(), level.getDescription());
@@ -63,7 +63,7 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public Event findById(Long id) {
-        return this.eventRepository.findById(id)
+        return eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
     }
 

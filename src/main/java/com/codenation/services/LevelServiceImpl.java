@@ -21,7 +21,7 @@ public class LevelServiceImpl implements LevelService {
     @Override
     public Level register(Level level) throws InstanceAlreadyExistsException {
         String description = level.getDescription();
-        Level checkLevel = this.levelRepository.findByDescription(description).orElse(null);
+        Level checkLevel = levelRepository.findByDescription(description).orElse(null);
         if (checkLevel == null) {
             return levelRepository.save(level);
         } else {
@@ -29,6 +29,6 @@ public class LevelServiceImpl implements LevelService {
         }    }
 
     @Override
-    public List<Level> getAll() { return this.levelRepository.findAll(); }
+    public List<Level> getAll() { return levelRepository.findAll(); }
 
 }
