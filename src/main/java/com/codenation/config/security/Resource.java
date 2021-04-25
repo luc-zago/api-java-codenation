@@ -15,6 +15,8 @@ public class Resource extends ResourceServerConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/user").permitAll()
                 .antMatchers(HttpMethod.GET,"/user").hasAuthority(Authority.ADMIN.name())
+                .antMatchers(HttpMethod.DELETE, "/event/{id}").hasAuthority(Authority.ADMIN.name())
+                .antMatchers(HttpMethod.POST, "/event/{id}").hasAuthority(Authority.ADMIN.name())
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
                         "/swagger-resources/**",

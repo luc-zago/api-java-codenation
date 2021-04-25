@@ -83,4 +83,18 @@ public class EventController {
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
     }
 
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Deleta um evento por id")
+    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+        eventService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Evento apagado com sucesso!");
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Deleta um evento por id")
+    public ResponseEntity<EventDTOWithLog> updateById(@PathVariable("id") Long id) {
+        Event event = eventService.updateById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(event));
+    }
+
 }

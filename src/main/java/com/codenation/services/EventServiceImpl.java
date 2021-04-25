@@ -67,6 +67,20 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Event updateById(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+        return eventRepository.save(event);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+        eventRepository.delete(event);
+    }
+
+    @Override
     public List<Event> getAll(Pageable pageable) {
         return this.eventRepository.findAll(pageable).getContent();
     }
