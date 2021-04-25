@@ -49,10 +49,10 @@ public class LevelController {
         return ResponseEntity.status(HttpStatus.OK).body("Level apagado com sucesso!");
     }
 
-    @PutMapping("/{id}")
+    @PutMapping
     @ApiOperation(value = "Atualiza um level por id")
-    public ResponseEntity<Level> updateById(@PathVariable("id") Long id) {
-        Level level = levelService.updateById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(level);
+    public ResponseEntity<Level> updateById(@RequestBody Level level) {
+        Level updatedLevel = levelService.update(level);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedLevel);
     }
 }
