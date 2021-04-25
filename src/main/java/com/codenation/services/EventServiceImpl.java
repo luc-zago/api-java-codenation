@@ -77,7 +77,7 @@ public class EventServiceImpl implements EventService {
                     level, order, sort, pageable).getContent();
             return teste;
         } */
-        List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email, level, order, pageable).getContent();
+        List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email, level, pageable).getContent();
         return teste;
     }
 
