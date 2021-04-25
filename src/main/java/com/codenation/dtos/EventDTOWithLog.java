@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -15,7 +16,7 @@ public class EventDTOWithLog {
     private String description;
     private String log;
     private String origin;
-    private LocalDate date;
+    private Date date;
     private Integer quantity;
     private String user;
     private String level;

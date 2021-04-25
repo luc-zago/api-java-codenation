@@ -8,6 +8,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -34,7 +35,7 @@ public class Event {
 
     @NotNull(message = "O campo 'data' é obrigatório")
     @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private LocalDate date;
+    private Date date;
 
     @NotNull(message = "O campo 'quantidade' é obrigatório")
     private Integer quantity;
