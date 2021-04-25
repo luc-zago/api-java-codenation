@@ -17,7 +17,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     Page<Event> findAll(Pageable pageable);
 
     List<Event> findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
-            String desc, String log, String origin, LocalDate date, Integer qtt, String  level);
+            String desc, String log, String origin, LocalDate date, Integer qtt, String level);
 
     Page<Event> findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
             String description, String origin, String email, String levelDescription, Pageable pageable);
@@ -33,7 +33,7 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
     Page<Event> findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
             String description, String origin, LocalDate date, Integer quantity, String email,
             String levelDescription, Pageable pageable);
-/*
+
     @Query("SELECT e FROM Event AS e WHERE " +
             "e.description LIKE CONCAT('%', :description, '%')  " +
             "AND e.origin LIKE CONCAT('%', :origin, '%')  " +
@@ -43,29 +43,11 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             "AND e.level.description LIKE CONCAT('%', :level, '%')  " +
             "ORDER BY :order")
     Page<Event> filterAndSort(@Param("description") String description,
-                                   @Param("origin") String origin,
-                                   @Param("date") LocalDate date,
-                                   @Param("quantity") Integer quantity,
-                                   @Param("email") String email,
-                                   @Param("level") String level,
-                                   @Param("order") String orderParameter,
-                                   Pageable pageable); */
-@Query(value = "SELECT * FROM events WHERE " +
-        "description LIKE "%" + :description + "%"  " +
-        "AND origin LIKE "%" + :origin "%"  " +
-        "AND :date IS NULL OR date = :date " +
-        "AND :quantity IS NULL OR quantity = :quantity " +
-        //"AND user.email LIKE CONCAT('%', :email, '%')  " +
-        //"AND level.description LIKE CONCAT('%', :level, '%')  " +
-        "ORDER BY :order + " +
-        ":sort", nativeQuery = true)
-Page<Event> filterAndSort(@Param("description") String description,
-                          @Param("origin") String origin,
-                          //@Param("date") LocalDate date,
-                          //@Param("quantity") Integer quantity,
-                          //@Param("email") String email,
-                          //@Param("level") String level,
-                          @Param("order") String orderParameter,
-                          @Param("sort") String sort,
-                          Pageable pageable);
+                              @Param("origin") String origin,
+                              @Param("date") LocalDate date,
+                              @Param("quantity") Integer quantity,
+                              @Param("email") String email,
+                              @Param("level") String level,
+                              @Param("order") String orderParameter,
+                              Pageable pageable);
 }

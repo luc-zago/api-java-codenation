@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,12 +24,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/event")
 @AllArgsConstructor
 @Api(value = "Api Rest Error Manager")
-@CrossOrigin(origins = "*")
 public class EventController {
 
     final private EventServiceImpl eventService;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     private CreateEventDTO toCreateEventDTO(Event event) {
         return modelMapper.map(event, CreateEventDTO.class);

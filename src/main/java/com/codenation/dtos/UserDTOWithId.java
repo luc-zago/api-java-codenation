@@ -1,8 +1,10 @@
 package com.codenation.dtos;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class UserDTOWithId {
 
     private Long id;

@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface UserService {
 
-    public User register(User user) throws InstanceAlreadyExistsException;
-    public List<User> getAll();
+    User register(User user) throws InstanceAlreadyExistsException;
+    List<User> getAll();
 }

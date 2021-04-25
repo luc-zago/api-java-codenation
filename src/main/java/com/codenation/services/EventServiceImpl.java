@@ -68,11 +68,6 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public List<Event> getAll(Pageable pageable) {
-        return this.eventRepository.findAll(pageable).getContent();
-    }
-
-    @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
                                      String email, String level, String order, String sort,
                                      Pageable pageable) {
@@ -82,7 +77,7 @@ public class EventServiceImpl implements EventService {
                     level, order, sort, pageable).getContent();
             return teste;
         } */
-        List<Event> teste = eventRepository.filterAndSort(description, origin, order, sort, pageable).getContent();
+        List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email, level, order, pageable).getContent();
         return teste;
     }
 

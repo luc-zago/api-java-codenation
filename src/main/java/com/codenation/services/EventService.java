@@ -1,7 +1,6 @@
 package com.codenation.services;
 
 import com.codenation.models.Event;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
@@ -9,12 +8,10 @@ import java.util.List;
 
 public interface EventService {
 
-    public Event findById(Long id);
+    Event findById(Long id);
 
-    public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
+    List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
                                      String email, String level, String order, String sort,
                                      Pageable pageable);
-
-    public List<Event> getAll(Pageable pageable);
 
 }

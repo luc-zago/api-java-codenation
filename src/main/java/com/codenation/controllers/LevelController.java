@@ -1,7 +1,6 @@
 package com.codenation.controllers;
 
 import com.codenation.models.Level;
-import com.codenation.models.User;
 import com.codenation.services.LevelServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -18,7 +17,6 @@ import java.util.List;
 @RequestMapping("/level")
 @AllArgsConstructor
 @Api(value = "Api Rest Error Manager")
-@CrossOrigin(origins = "*")
 public class LevelController {
 
     final private LevelServiceImpl levelService;

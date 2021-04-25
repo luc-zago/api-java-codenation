@@ -1,6 +1,5 @@
 package com.codenation.controllers;
 
-import com.codenation.dtos.LoginDTO;
 import com.codenation.dtos.UserDTO;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
@@ -26,10 +25,6 @@ public class LoginController {
 
     private final ModelMapper modelMapper;
 
-    private LoginDTO toLoginDTO(User user) {
-        return modelMapper.map(user, LoginDTO.class);
-    }
-
     @GetMapping
     @ApiOperation(value = "Retorna o email, nome e sobrenome do usuário logado")
     public ResponseEntity<UserDTO> login() {
@@ -47,7 +42,5 @@ public class LoginController {
         return loggedUser.map(
                 user -> ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(user, UserDTO.class))
             ).orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        
-        // () -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null)
     }
 }

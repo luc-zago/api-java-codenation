@@ -7,9 +7,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import com.codenation.models.User;
 import org.springframework.http.HttpStatus;
@@ -24,12 +21,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 @AllArgsConstructor
 @Api(value = "Api Rest Error Manager")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     final private UserServiceImpl userService;
 
-    private ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     private UserDTO toUserDTO(User user) {
         return modelMapper.map(user, UserDTO.class);
