@@ -6,24 +6,30 @@ import com.codenation.models.User;
 import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-@AllArgsConstructor
 public class EventServiceImpl implements EventService {
 
-    final private EventRepository eventRepository;
-    final private UserRepository userRepository;
-    final private LevelRepository levelRepository;
+    private final EventRepository eventRepository;
+    private final UserRepository userRepository;
+    private final LevelRepository levelRepository;
+
+    @Autowired
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository,
+                            LevelRepository levelRepository) {
+        this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
+        this.levelRepository = levelRepository;
+    }
 
     private String getLoggedUserEmail() {
         String email;
@@ -35,11 +41,6 @@ public class EventServiceImpl implements EventService {
             email = principal.toString();
         }
         return email;
-    }
-
-    @Override
-    public Event save(Event event) {
-        return this.eventRepository.save(event);
     }
 
     public Event register(Event event) {
@@ -57,7 +58,7 @@ public class EventServiceImpl implements EventService {
         }
         event.setUser(user);
         event.setLevel(level);
-        return save(event);
+        return eventRepository.save(event);
     }
 
     @Override
@@ -73,35 +74,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
-                                     String email, String level, Integer page, Integer size,
-                                     String order, String sort,
+                                     String email, String level, String order, String sort,
                                      Pageable pageable) {
-        if (order.equals("level")) {
-            order = "level.description";
-        } else if (order.equals("user")) {
-            order = "user.email";
-        }
-        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
         sort = sort.toUpperCase();
-        if (sort.equals("DESC")) {
-            pageable = PageRequest.of(page, size, Sort.by(order).descending());
-        }
-        List<Event> eventList = new ArrayList<>();
-        if (date == null && quantity == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                            description, origin, email, level, pageable).getContent());
-        } else if (date == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, quantity, email, level, pageable).getContent());
-        } else if (quantity == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, email, level, pageable).getContent());
-        } else {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, quantity, email, level, pageable).getContent());
-        }
-
-        return eventList;
+        /*if (sort.equals("DESC")) {
+            List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email,
+                    level, order, sort, pageable).getContent();
+            return teste;
+        } */
+        List<Event> teste = eventRepository.filterAndSort(description, origin, order, sort, pageable).getContent();
+        return teste;
     }
 
 }

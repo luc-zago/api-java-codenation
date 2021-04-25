@@ -4,6 +4,7 @@ import com.codenation.enums.Authority;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,10 +14,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    final private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     private PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -31,13 +36,8 @@ public class UserServiceImpl implements UserService {
         } else {
             user.setPassword(this.passwordEncoder().encode(user.getPassword()));
             user.setAuthority(Authority.USER);
-            return this.save(user);
+            return userRepository.save(user);
         }
-    }
-
-    @Override
-    public User save(User user) {
-        return this.userRepository.save(user);
     }
 
     @Override
