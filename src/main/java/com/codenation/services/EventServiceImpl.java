@@ -7,6 +7,8 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -66,11 +68,59 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
     }
 
+    private void checkLength(String name, String string, Integer length) {
+        if (string.length() > length) {
+            throw new IllegalArgumentException("O campo '" + name + "' não pode ter mais de " +
+                    length + " caracteres");
+        }
+    }
+
+    private void checkQuantity(Integer quantity) {
+        if (quantity <= 0) {
+            throw new IllegalArgumentException("O campo 'quantidade' tem que ser maior que 0");
+        }
+    }
+
     @Override
-    public Event updateById(Long id) {
-        Event event = eventRepository.findById(id)
+    public Event update(Event event) {
+        Event updatedEvent = new Event();
+
+        Long eventId = event.getId();
+        Long levelId = event.getLevel().getId();
+        String description = event.getDescription();
+        String log = event.getLog();
+        String origin = event.getOrigin();
+        LocalDate date = event.getDate();
+        Integer quantity = event.getQuantity();
+
+        eventRepository.findById(eventId)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
-        return eventRepository.save(event);
+        updatedEvent.setId(eventId);
+
+        User loggedUser = userRepository.findByEmail(getLoggedUserEmail())
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        updatedEvent.setUser(loggedUser);
+
+        if (levelId != null) {
+            Level level = levelRepository.findById(levelId)
+                    .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
+            updatedEvent.setLevel(level);
+        } else if (description != null && description != "") {
+            checkLength("descrição", description, 255);
+            updatedEvent.setDescription(description);
+        } else if (log != null && log != "") {
+            checkLength("log", log, 255);
+            updatedEvent.setLog(log);
+        } else if (origin != null && origin != "") {
+            checkLength("origem", origin, 100);
+            updatedEvent.setOrigin(origin);
+        } else if (date != null) {
+            updatedEvent.setDate(date);
+        } else if (quantity != null) {
+            checkQuantity(quantity);
+            updatedEvent.setQuantity(quantity);
+        }
+        return eventRepository.save(updatedEvent);
     }
 
     @Override
