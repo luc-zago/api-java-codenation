@@ -74,37 +74,21 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
-                                     String email, String level, Integer page, Integer size,
-                                     String order, String sort,
-                                     Pageable pageable) {
+                             String email, String level, String order, String sort, Integer page,
+                             Integer size, Pageable pageable) {
+        EventSpecification spec = new EventSpecification(
+                description, origin, date, quantity, email, level);
+
+        if (order.equals("user")) {
+            order = "user.email";
+        } else if (order.equals("level")) {
+            order = "level.description";
+        }
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
         sort = sort.toUpperCase();
         if (sort.equals("DESC")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
-        List<Event> eventList = new ArrayList<>();
-        if (date == null && quantity == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndUserEmailContainsAndLevelDescriptionContains(
-                            description, origin, email, level, pageable).getContent());
-        } else if (date == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, quantity, email, level, pageable).getContent());
-        } else if (quantity == null) {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, email, level, pageable).getContent());
-        } else {
-            eventList.addAll(eventRepository.findAllByDescriptionContainsAndOriginContainsAndDateAndQuantityAndUserEmailContainsAndLevelDescriptionContains(
-                    description, origin, date, quantity, email, level, pageable).getContent());
-        }
-
-        return eventList;
-    }
-
-    public List<Event> teste(String description, String origin, LocalDate date, Integer quantity,
-                             String email, String level, String order, String sort,
-                             Pageable pageable) {
-        EventSpecification spec = new EventSpecification(
-                description, origin, date, quantity, email, level, order, sort);
         return this.eventRepository.findAll(spec, pageable).getContent();
     }
 }

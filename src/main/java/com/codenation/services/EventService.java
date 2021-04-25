@@ -12,9 +12,8 @@ public interface EventService extends ServiceInterface<Event> {
     public Event findById(Long id);
 
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
-                              String email, String level, Integer page, Integer size,
-                              String order, String sort,
-                              Pageable pageable);
+                              String email, String level, String order, String sort,
+                                     Integer page, Integer size, Pageable pageable);
 
     public List<Event> getAll(Pageable pageable);
 
