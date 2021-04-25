@@ -34,13 +34,14 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
             String description, String origin, LocalDate date, Integer quantity, String email,
             String levelDescription, Pageable pageable);
 
-    @Query("SELECT e FROM Event AS e WHERE " +
-            "e.description LIKE CONCAT('%', :description, '%') " +
-            "AND e.origin LIKE CONCAT('%', :origin, '%')  " +
-            "AND :date IS NULL OR e.date = TO_DATE(:date) " +
+    @Query(value = "SELECT * FROM EVENTS AS e WHERE " +
+            "e.description LIKE %:description% " +
+            "AND e.origin LIKE %:origin% " +
+            "AND (:date IS NULL OR e.date = TO_DATE(TO_CHAR(:date))) " +
             "AND (:quantity IS NULL OR e.quantity = :quantity) " +
-            "AND e.user.email LIKE CONCAT('%', :email, '%') " +
-            "AND e.level.description LIKE CONCAT ('%', :level, '%') ")
+            "AND e.user.email LIKE %:email% " +
+            "AND e.level.description LIKE %:level% ",
+            nativeQuery = true)
     Page<Event> filterAndSort(@Param("description") String description,
                               @Param("origin") String origin,
                               @Param("date") LocalDate date,
