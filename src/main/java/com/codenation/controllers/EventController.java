@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.InstanceAlreadyExistsException;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
@@ -55,7 +56,7 @@ public class EventController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
-    public ResponseEntity<CreateEventDTO> register(@RequestBody @Valid Event event) {
+    public ResponseEntity<CreateEventDTO> register(@RequestBody @Valid Event event) throws InstanceAlreadyExistsException {
         Event eventCreated = eventService.register(event);
         if (eventCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
