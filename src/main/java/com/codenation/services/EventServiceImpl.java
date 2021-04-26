@@ -45,7 +45,7 @@ public class EventServiceImpl implements EventService {
         return this.eventRepository.save(event);
     }
 
-    public Event register(Event event) {
+    public Event register(Event event) throws InstanceAlreadyExistsException {
         Long levelId = event.getLevel().getId();
         User user = this.userRepository.findByEmail(getLoggedUserEmail())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));

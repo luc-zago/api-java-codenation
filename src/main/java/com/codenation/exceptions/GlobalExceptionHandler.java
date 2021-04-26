@@ -11,11 +11,12 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ResponseEntity<CustomizedExceptionHandlerResponse> exceptionResponse(int code, String message) {
+    private ResponseEntity<CustomizedExceptionHandlerResponse> exceptionResponse(
+            int code, String message, HttpStatus status) {
         LocalDateTime time = LocalDateTime.now();
         CustomizedExceptionHandlerResponse error = new CustomizedExceptionHandlerResponse(
                 code, message, time);
-        return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, status);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException exception) {
         String message = exception.getFieldError().getDefaultMessage();
         int code = HttpStatus.BAD_REQUEST.value();
-        return exceptionResponse(code, message);
+        return exceptionResponse(code, message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
@@ -31,9 +32,11 @@ public class GlobalExceptionHandler {
             Exception exception) {
         String message = exception.getMessage();
         int code = HttpStatus.CONFLICT.value();
+        HttpStatus status = HttpStatus.CONFLICT;
         if (exception.getClass().getName().contains("NoSuchElement")) {
             code = HttpStatus.NOT_FOUND.value();
+            status = HttpStatus.NOT_FOUND;
         }
-        return exceptionResponse(code, message);
+        return exceptionResponse(code, message, status);
     }
 }
