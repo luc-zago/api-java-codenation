@@ -32,10 +32,11 @@ public class LevelServiceImpl implements LevelService {
         }    }
 
     @Override
-    public Level update(Level level) {
-        /*Level level = levelRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Level não encontrado")); */
-        return level;
+    public Level update(Level level, Long id) {
+        Level oldLevel = levelRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
+        oldLevel.setDescription(level.getDescription());
+        return levelRepository.save(oldLevel);
     }
 
     @Override
