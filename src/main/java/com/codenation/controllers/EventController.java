@@ -89,11 +89,13 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body("Evento apagado com sucesso!");
     }
 
-    @PutMapping
-    @ApiOperation(value = "Atualiza um evento")
-    public ResponseEntity<Event> updateById(@RequestBody Event event) {
-        Event updatedEvent = eventService.update(event);
-        return ResponseEntity.status(HttpStatus.OK).body(updatedEvent);
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Atualiza um evento por id")
+    public ResponseEntity<EventDTOWithLog> updateById(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid Event event) {
+        Event updatedEvent = eventService.update(event, id);
+        return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(updatedEvent));
     }
 
 }

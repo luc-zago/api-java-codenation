@@ -68,65 +68,33 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
     }
 
-    private void checkLength(String name, String string, Integer length) {
-        if (string.length() > length) {
-            throw new IllegalArgumentException("O campo '" + name + "' não pode ter mais de " +
-                    length + " caracteres");
-        }
-    }
-
-    private void checkQuantity(Integer quantity) {
-        if (quantity <= 0) {
-            throw new IllegalArgumentException("O campo 'quantidade' tem que ser maior que 0");
-        }
-    }
-
     @Override
-    public Event update(Event event) {
-        Event updatedEvent = new Event();
-
-        Long eventId = event.getId();
-        Long levelId = event.getLevel().getId();
-        String description = event.getDescription();
-        String log = event.getLog();
-        String origin = event.getOrigin();
-        LocalDate date = event.getDate();
-        Integer quantity = event.getQuantity();
-
-        eventRepository.findById(eventId)
+    public Event update(Event event, Long id) {
+        Event oldEvent = eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
-        updatedEvent.setId(eventId);
-
-        User loggedUser = userRepository.findByEmail(getLoggedUserEmail())
-                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        updatedEvent.setUser(loggedUser);
-
-        if (levelId != null) {
-            Level level = levelRepository.findById(levelId)
-                    .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-            updatedEvent.setLevel(level);
-        } else if (description != null && description != "") {
-            checkLength("descrição", description, 255);
-            updatedEvent.setDescription(description);
-        } else if (log != null && log != "") {
-            checkLength("log", log, 255);
-            updatedEvent.setLog(log);
-        } else if (origin != null && origin != "") {
-            checkLength("origem", origin, 100);
-            updatedEvent.setOrigin(origin);
-        } else if (date != null) {
-            updatedEvent.setDate(date);
-        } else if (quantity != null) {
-            checkQuantity(quantity);
-            updatedEvent.setQuantity(quantity);
+        Level level = levelRepository.findById(event.getLevel().getId())
+                .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!oldEvent.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
         }
-        return eventRepository.save(updatedEvent);
+        oldEvent.setDescription(event.getDescription());
+        oldEvent.setLog(event.getLog());
+        oldEvent.setOrigin(event.getOrigin());
+        oldEvent.setDate(event.getDate());
+        oldEvent.setQuantity(event.getQuantity());
+        oldEvent.setLevel(level);
+        return eventRepository.save(oldEvent);
     }
 
     @Override
     public void deleteById(Long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!event.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
         eventRepository.delete(event);
     }
 

@@ -7,7 +7,7 @@ spring:
       ddl-auto: update
   datasource:
     username: ${USERNAME:postgres}
-    password: ${PASSWORD:291197}
+    password: ${PASSWORD:204615}
     url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/error_manager}
 
 authorization:
@@ -28,7 +28,7 @@ swagger:
   terms-of-service-url: N/A
   contact:
     name: Grupo 3
-    url: linkdogithubdoprojeto
+    url: https://github.com/luc-zago/api-java-codenation
     email: N/A
   licence: MIT licence
   licence-url: https://mit-license.org/

@@ -15,8 +15,6 @@ public class Resource extends ResourceServerConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/user").permitAll()
                 .antMatchers(HttpMethod.GET,"/user").hasAuthority(Authority.ADMIN.name())
-                .antMatchers(HttpMethod.DELETE, "/event/{id}").hasAuthority(Authority.ADMIN.name())
-                .antMatchers(HttpMethod.PUT, "/event").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/level/{id}").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.PUT, "/level").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/user/{id}").hasAuthority(Authority.ADMIN.name())

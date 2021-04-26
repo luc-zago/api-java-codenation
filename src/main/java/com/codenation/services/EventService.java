@@ -10,7 +10,7 @@ import java.util.List;
 public interface EventService extends ServiceInterface<Event> {
 
     public Event findById(Long id);
-    public Event update(Event event);
+    public Event update(Event event, Long id);
     public void deleteById(Long id);
 
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,

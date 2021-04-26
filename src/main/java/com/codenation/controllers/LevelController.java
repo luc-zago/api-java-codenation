@@ -48,11 +48,11 @@ public class LevelController {
         levelService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Level apagado com sucesso!");
     }
-
+/*
     @PutMapping
     @ApiOperation(value = "Atualiza um level por id")
     public ResponseEntity<Level> updateById(@RequestBody Level level) {
         Level updatedLevel = levelService.update(level);
         return ResponseEntity.status(HttpStatus.OK).body(updatedLevel);
-    }
+    } */
 }
