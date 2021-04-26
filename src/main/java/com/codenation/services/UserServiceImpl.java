@@ -1,7 +1,6 @@
 package com.codenation.services;
 
 import com.codenation.enums.Authority;
-import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
