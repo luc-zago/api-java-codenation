@@ -5,6 +5,8 @@ import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,18 @@ public class UserServiceImpl implements UserService {
         return new BCryptPasswordEncoder();
     }
 
+    private String getLoggedUserEmail() {
+        String email;
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            email = ((UserDetails)principal).getUsername();
+        } else {
+            email = principal.toString();
+        }
+        return email;
+    }
+
     @Override
     public User register(User user) throws InstanceAlreadyExistsException {
         Optional<User> checkUser = this.userRepository.findByEmail(user.getEmail());
@@ -35,6 +49,17 @@ public class UserServiceImpl implements UserService {
             user.setAuthority(Authority.USER);
             return this.save(user);
         }
+    }
+
+    @Override
+    public User update(User user) {
+        String email = getLoggedUserEmail();
+        User oldUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        oldUser.setFirstname(user.getFirstname());
+        oldUser.setLastname(user.getLastname());
+        oldUser.setPassword(user.getPassword());
+        return userRepository.save(oldUser);
     }
 
     @Override
@@ -51,6 +76,10 @@ public class UserServiceImpl implements UserService {
     public void deleteById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!user.getEmail().equals(email) && !user.getEmail().equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
         userRepository.delete(user);
     }
 }

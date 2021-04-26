@@ -1,7 +1,9 @@
 package com.codenation.controllers;
 
+import com.codenation.dtos.EventDTOWithLog;
 import com.codenation.dtos.UserDTO;
 import com.codenation.dtos.UserDTOWithId;
+import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.services.UserServiceImpl;
 import io.swagger.annotations.Api;
@@ -63,5 +65,12 @@ public class UserController {
     public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
         userService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Usuário apagado com sucesso!");
+    }
+
+    @PutMapping
+    @ApiOperation(value = "Atualiza um usuário")
+    public ResponseEntity<UserDTO> update(@RequestBody @Valid User user) {
+        User updatedUser = userService.update(user);
+        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(updatedUser));
     }
 }

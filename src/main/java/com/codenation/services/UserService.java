@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserService extends ServiceInterface<User> {
 
     public User register(User user) throws InstanceAlreadyExistsException;
+    public User update(User user);
     public void deleteById(Long id);
     public List<User> getAll();
 }
