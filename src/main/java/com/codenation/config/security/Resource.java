@@ -17,7 +17,7 @@ public class Resource extends ResourceServerConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/user").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.DELETE, "/level/{id}").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/level").hasAuthority(Authority.ADMIN.name())
-                .antMatchers(HttpMethod.PUT, "/level").hasAuthority(Authority.ADMIN.name())
+                .antMatchers(HttpMethod.PUT, "/level/{id}").hasAuthority(Authority.ADMIN.name())
                 .antMatchers(HttpMethod.POST, "/event").hasAuthority(Authority.USER.name())
                 .antMatchers("/v2/api-docs",
                         "/configuration/ui",
