@@ -67,6 +67,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body("Usuário apagado com sucesso!");
     }
 
+    @DeleteMapping
+    @ApiOperation(value = "Deleta um usuário")
+    public ResponseEntity<String> delete() {
+        userService.delete();
+        return ResponseEntity.status(HttpStatus.OK).body("Usuário apagado com sucesso!");
+    }
+
     @PutMapping
     @ApiOperation(value = "Atualiza um usuário")
     public ResponseEntity<UserDTO> update(@RequestBody @Valid User user) {
