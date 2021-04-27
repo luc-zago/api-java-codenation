@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -44,7 +45,7 @@ public class EventServiceImpl implements EventService {
         return this.eventRepository.save(event);
     }
 
-    public Event register(Event event) {
+    public Event register(Event event) throws InstanceAlreadyExistsException {
         Long levelId = event.getLevel().getId();
         User user = this.userRepository.findByEmail(getLoggedUserEmail())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
@@ -55,7 +56,7 @@ public class EventServiceImpl implements EventService {
                         event.getDescription(), event.getLog(), event.getOrigin(), event.getDate(),
                         event.getQuantity(), level.getDescription());
         if (!eventsList.isEmpty()) {
-            throw new IllegalArgumentException("Evento já cadastrado");
+            throw new InstanceAlreadyExistsException("Evento já cadastrado");
         }
         event.setUser(user);
         event.setLevel(level);
