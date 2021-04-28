@@ -46,7 +46,7 @@ public class LevelController {
     @ApiOperation(value = "Atualiza um level por id")
     public ResponseEntity<Level> updateById(
             @PathVariable("id") Long id,
-            @RequestBody Level level) {
+            @RequestBody @Valid Level level) {
         Level updatedLevel = levelService.update(level, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedLevel);
     }

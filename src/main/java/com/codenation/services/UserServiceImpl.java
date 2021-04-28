@@ -55,6 +55,9 @@ public class UserServiceImpl implements UserService {
         String email = getLoggedUserEmail();
         User oldUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        if (!email.equals(user.getEmail())) {
+            throw new IllegalArgumentException("Usuário inválido");
+        }
         oldUser.setFirstname(user.getFirstname());
         oldUser.setLastname(user.getLastname());
         oldUser.setPassword(user.getPassword());
