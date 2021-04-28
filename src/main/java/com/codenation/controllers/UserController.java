@@ -55,7 +55,7 @@ public class UserController {
     }
 
     @PutMapping
-    @ApiOperation(value = "Atualiza um usuário")
+    @ApiOperation(value = "Atualiza nome, sobrenome e senha de um usuário")
     public ResponseEntity<UserDTO> update(@RequestBody @Valid User user) {
         User updatedUser = userService.update(user);
         return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(updatedUser));
