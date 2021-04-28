@@ -1,10 +1,7 @@
 package com.codenation.controllers;
 
-import com.codenation.dtos.EventDTOWithLog;
 import com.codenation.dtos.UserDTO;
 import com.codenation.dtos.UserDTOWithId;
-import com.codenation.models.Event;
-import com.codenation.models.Level;
 import com.codenation.services.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

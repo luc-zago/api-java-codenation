@@ -48,11 +48,4 @@ public class LoginController {
     public ResponseEntity<UserDTO> login() {
         return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(this.getLoggedUser()));
     }
-
-    @PutMapping
-    @ApiOperation(value = "Atualiza nome, sobrenome e senha do usuário logado")
-    public ResponseEntity<UserDTO> updateLoggedUser() {
-        User user = this.getLoggedUser();
-        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(user));
-    }
 }
