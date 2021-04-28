@@ -10,7 +10,6 @@ public interface UserService extends ServiceInterface<User> {
 
     public User register(User user) throws InstanceAlreadyExistsException;
     public User update(User user);
-    public void deleteById(Long id);
     public void delete();
     public List<User> getAll();
 }

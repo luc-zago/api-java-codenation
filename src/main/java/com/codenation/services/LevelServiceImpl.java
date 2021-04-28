@@ -40,13 +40,6 @@ public class LevelServiceImpl implements LevelService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        Level level = levelRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        levelRepository.delete(level);
-    }
-
-    @Override
     public List<Level> getAll() { return this.levelRepository.findAll(); }
 
 }

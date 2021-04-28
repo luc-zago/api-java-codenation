@@ -71,21 +71,4 @@ public class UserServiceImpl implements UserService {
         return this.userRepository.findAll();
     }
 
-    @Override
-    public void deleteById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        userRepository.delete(user);
-    }
-
-    @Override
-    public void delete() {
-        String email = getLoggedUserEmail();
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        if (!user.getEmail().equals(email) && !user.getEmail().equals("admin@admin.com")) {
-            throw new IllegalArgumentException("Usuário não autorizado");
-        }
-        userRepository.delete(user);
-    }
 }

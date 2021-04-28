@@ -10,6 +10,5 @@ public interface LevelService extends ServiceInterface<Level> {
 
     public Level register(Level level) throws InstanceAlreadyExistsException;
     public Level update(Level level, Long id);
-    public void deleteById(Long id);
     public List<Level> getAll();
 }

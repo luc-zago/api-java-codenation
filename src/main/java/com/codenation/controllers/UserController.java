@@ -60,20 +60,6 @@ public class UserController {
             .stream().map(this::toUserWithId).collect(Collectors.toList()));
     }
 
-    @DeleteMapping("/{id}")
-    @ApiOperation(value = "Deleta um usuário por id")
-    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
-        userService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Usuário apagado com sucesso!");
-    }
-
-    @DeleteMapping
-    @ApiOperation(value = "Deleta um usuário")
-    public ResponseEntity<String> delete() {
-        userService.delete();
-        return ResponseEntity.status(HttpStatus.OK).body("Usuário apagado com sucesso!");
-    }
-
     @PutMapping
     @ApiOperation(value = "Atualiza um usuário")
     public ResponseEntity<UserDTO> update(@RequestBody @Valid User user) {

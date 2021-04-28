@@ -42,13 +42,6 @@ public class LevelController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    @ApiOperation(value = "Deleta um level por id")
-    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
-        levelService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Level apagado com sucesso!");
-    }
-
     @PutMapping("/{id}")
     @ApiOperation(value = "Atualiza um level por id")
     public ResponseEntity<Level> updateById(
