@@ -47,7 +47,7 @@ public class EventController {
     }
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Busca evento por id")
+    @ApiOperation(value = "Retorna um evento por com base no 'id' passado pela url")
     public ResponseEntity<EventDTOWithLog> findById(@PathVariable("id") Long id){
         Event event = eventService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(event));
@@ -65,7 +65,16 @@ public class EventController {
     }
 
     @GetMapping
-    @ApiOperation(value = "Retorna todos os eventos")
+    @ApiOperation(value = "Retorna todos os eventos ocultando o campo 'log'. O retorno pode ser filtrado " +
+            "e ordenado de acordo com os seguintes parâmetros que podem ser passados via url: a) description: " +
+            "descrição do evento; b) origin: origem do evento; c) date: data do evento; d) quantity: " +
+            "quantidade de ocorrências do evento; e) user: email do usuário que registrou o evento; " +
+            "f) level: descrição do level do evento; " +
+            "Os eventos também podem ser ordenados por qualquer um dos atributos mencionados através " +
+            "do parâmetro 'order', que também é passado via url e recebe como valor o nome do atributo que " +
+            "deve ser tomado como referência (Ex: description, user, level). Se nenhum parâmetro é passado, " +
+            "o retorno é ordenado pelo atributo 'id' em ordem ascendente. Para alterar o retorno para ordem " +
+            "descendente, deve ser utilizado o parâmetro 'sort' via url com o valor 'desc'.")
     public ResponseEntity<List<EventDTO>> getAll(
             @RequestParam(value = "description", required = false, defaultValue = "") String description,
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
@@ -84,14 +93,14 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    @ApiOperation(value = "Deleta um evento por id")
+    @ApiOperation(value = "Deleta um evento com base no 'id' passado pela url")
     public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
         eventService.deleteById(id);
         return ResponseEntity.status(HttpStatus.OK).body("Evento apagado com sucesso!");
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Atualiza um evento por id")
+    @ApiOperation(value = "Atualiza um evento com base no 'id' passado pela url")
     public ResponseEntity<EventDTOWithLog> updateById(
             @PathVariable("id") Long id,
             @RequestBody @Valid Event event) {
