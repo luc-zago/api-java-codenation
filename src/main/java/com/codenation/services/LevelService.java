@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface LevelService {
 
-    public Level register(Level level) throws InstanceAlreadyExistsException;
-    public Level update(Level level, Long id);
-    public List<Level> getAll();
+    Level register(Level level) throws InstanceAlreadyExistsException;
+    Level update(Level level, Long id);
+    List<Level> getAll();
 }

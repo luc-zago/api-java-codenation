@@ -1,6 +1,5 @@
 package com.codenation.services;
 
-import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.repositories.LevelRepository;
 import org.springframework.beans.factory.annotation.Autowired;

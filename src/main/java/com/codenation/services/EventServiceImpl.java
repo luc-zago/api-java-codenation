@@ -9,9 +9,7 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import com.codenation.utils.SearchCriteria;
-import lombok.AllArgsConstructor;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -47,11 +45,6 @@ public class EventServiceImpl implements EventService {
             email = principal.toString();
         }
         return email;
-    }
-
-    @Override
-    public Event save(Event event) {
-        return this.eventRepository.save(event);
     }
 
     public Event register(Event event) throws InstanceAlreadyExistsException {
@@ -106,11 +99,6 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
         eventRepository.delete(event);
-    }
-
-    @Override
-    public List<Event> getAll(Pageable pageable) {
-        return this.eventRepository.findAll(pageable).getContent();
     }
 
     @Override

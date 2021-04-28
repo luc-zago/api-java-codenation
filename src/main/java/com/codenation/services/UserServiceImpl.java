@@ -3,7 +3,6 @@ package com.codenation.services;
 import com.codenation.enums.Authority;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -67,11 +66,6 @@ public class UserServiceImpl implements UserService {
         oldUser.setLastname(user.getLastname());
         oldUser.setPassword(this.passwordEncoder().encode(user.getPassword()));
         return userRepository.save(oldUser);
-    }
-
-    @Override
-    public User save(User user) {
-        return this.userRepository.save(user);
     }
 
     @Override

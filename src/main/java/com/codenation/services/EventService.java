@@ -8,14 +8,12 @@ import java.util.List;
 
 public interface EventService {
 
-    public Event findById(Long id);
-    public Event update(Event event, Long id);
-    public void deleteById(Long id);
+    Event findById(Long id);
+    Event update(Event event, Long id);
+    void deleteById(Long id);
 
-    public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
+    List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
                               String email, String level, String order, String sort,
                                      Integer page, Integer size, Pageable pageable);
-
-    public List<Event> getAll(Pageable pageable);
 
 }
