@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -82,6 +81,22 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.filterAndSort(description,
                 origin, date, quantity, email, level, order, sort, page, size, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Deleta um evento por id")
+    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+        eventService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Evento apagado com sucesso!");
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Atualiza um evento por id")
+    public ResponseEntity<EventDTOWithLog> updateById(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid Event event) {
+        Event updatedEvent = eventService.update(event, id);
+        return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(updatedEvent));
     }
 
 }

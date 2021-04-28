@@ -2,6 +2,7 @@ package com.codenation.controllers;
 
 import com.codenation.dtos.LoginDTO;
 import com.codenation.dtos.UserDTO;
+import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 
@@ -26,13 +27,11 @@ public class LoginController {
 
     private final ModelMapper modelMapper;
 
-    private LoginDTO toLoginDTO(User user) {
-        return modelMapper.map(user, LoginDTO.class);
+    private UserDTO toUserDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 
-    @GetMapping
-    @ApiOperation(value = "Retorna o email, nome e sobrenome do usuário logado")
-    public ResponseEntity<UserDTO> login() {
+    private User getLoggedUser() {
         String email;
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -43,11 +42,22 @@ public class LoginController {
             email = principal.toString();
         }
 
-        Optional<User> loggedUser = userRepository.findByEmail(email);
-        return loggedUser.map(
-                user -> ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(user, UserDTO.class))
-            ).orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        
+        User loggedUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        return loggedUser;
+    }
+
+    @GetMapping
+    @ApiOperation(value = "Retorna o email, nome e sobrenome do usuário logado")
+    public ResponseEntity<UserDTO> login() {
+        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(this.getLoggedUser()));
         // () -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null)
+    }
+
+    @PutMapping
+    @ApiOperation(value = "Atualiza os dados do usuário logado")
+    public ResponseEntity<UserDTO> updateLoggedUser() {
+        User user = this.getLoggedUser();
+        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(user));
     }
 }

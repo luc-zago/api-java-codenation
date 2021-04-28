@@ -10,6 +10,8 @@ import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import com.codenation.utils.SearchCriteria;
 import lombok.AllArgsConstructor;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -67,6 +69,36 @@ public class EventServiceImpl implements EventService {
     public Event findById(Long id) {
         return this.eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+    }
+
+    @Override
+    public Event update(Event event, Long id) {
+        Event oldEvent = eventRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+        Level level = levelRepository.findById(event.getLevel().getId())
+                .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!oldEvent.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
+        oldEvent.setDescription(event.getDescription());
+        oldEvent.setLog(event.getLog());
+        oldEvent.setOrigin(event.getOrigin());
+        oldEvent.setDate(event.getDate());
+        oldEvent.setQuantity(event.getQuantity());
+        oldEvent.setLevel(level);
+        return eventRepository.save(oldEvent);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!event.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
+        eventRepository.delete(event);
     }
 
     @Override
