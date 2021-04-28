@@ -19,6 +19,7 @@ import java.util.List;
 @RequestMapping("/level")
 @AllArgsConstructor
 @Api(value = "Api Rest Error Manager")
+@CrossOrigin(origins = "*")
 public class LevelController {
 
     final private LevelServiceImpl levelService;

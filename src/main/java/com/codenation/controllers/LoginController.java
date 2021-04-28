@@ -20,6 +20,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/login")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class LoginController {
 
     private final UserRepository userRepository;

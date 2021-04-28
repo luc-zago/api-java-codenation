@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 @AllArgsConstructor
 @Api(value = "Api Rest Error Manager")
+@CrossOrigin(origins = "*")
 public class UserController {
 
     final private UserServiceImpl userService;

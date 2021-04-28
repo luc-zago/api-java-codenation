@@ -8,7 +8,6 @@ import com.codenation.services.EventServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.bouncycastle.util.Times;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +25,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/event")
 @AllArgsConstructor
 @Api(value = "Api Rest Error Manager")
+@CrossOrigin(origins = "*")
 public class EventController {
 
     final private EventServiceImpl eventService;
