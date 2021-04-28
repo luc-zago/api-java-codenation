@@ -1,7 +1,6 @@
 package com.codenation.controllers;
 
 import com.codenation.dtos.UserDTO;
-import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 
@@ -15,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/login")
@@ -41,9 +39,8 @@ public class LoginController {
         } else {
             email = principal.toString();
         }
-        User loggedUser = userRepository.findByEmail(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        return loggedUser;
     }
 
     @GetMapping
@@ -53,7 +50,7 @@ public class LoginController {
     }
 
     @PutMapping
-    @ApiOperation(value = "Atualiza os dados do usuário logado")
+    @ApiOperation(value = "Atualiza nome, sobrenome e senha do usuário logado")
     public ResponseEntity<UserDTO> updateLoggedUser() {
         User user = this.getLoggedUser();
         return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(user));
