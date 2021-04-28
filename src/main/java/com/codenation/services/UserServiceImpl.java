@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         }
         oldUser.setFirstname(user.getFirstname());
         oldUser.setLastname(user.getLastname());
-        oldUser.setPassword(user.getPassword());
+        oldUser.setPassword(this.passwordEncoder().encode(user.getPassword()));
         return userRepository.save(oldUser);
     }
 
