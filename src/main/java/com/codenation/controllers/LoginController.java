@@ -1,6 +1,7 @@
 package com.codenation.controllers;
 
 import com.codenation.dtos.UserDTO;
+import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 
@@ -25,9 +26,11 @@ public class LoginController {
 
     private final ModelMapper modelMapper;
 
-    @GetMapping
-    @ApiOperation(value = "Retorna o email, nome e sobrenome do usuário logado")
-    public ResponseEntity<UserDTO> login() {
+    private UserDTO toUserDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    private User getLoggedUser() {
         String email;
 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -37,10 +40,21 @@ public class LoginController {
         } else {
             email = principal.toString();
         }
+        User loggedUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        return loggedUser;
+    }
 
-        Optional<User> loggedUser = userRepository.findByEmail(email);
-        return loggedUser.map(
-                user -> ResponseEntity.status(HttpStatus.OK).body(modelMapper.map(user, UserDTO.class))
-            ).orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+    @GetMapping
+    @ApiOperation(value = "Retorna o email, nome e sobrenome do usuário logado")
+    public ResponseEntity<UserDTO> login() {
+        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(this.getLoggedUser()));
+    }
+
+    @PutMapping
+    @ApiOperation(value = "Atualiza os dados do usuário logado")
+    public ResponseEntity<UserDTO> updateLoggedUser() {
+        User user = this.getLoggedUser();
+        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(user));
     }
 }

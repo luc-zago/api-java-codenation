@@ -12,25 +12,33 @@ import java.util.Objects;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    private ResponseEntity<CustomizedExceptionHandlerResponse> exceptionResponse(String message) {
+    private ResponseEntity<CustomizedExceptionHandlerResponse> exceptionResponse(
+            int code, String message, HttpStatus status) {
         LocalDateTime time = LocalDateTime.now();
-        int code = HttpStatus.BAD_REQUEST.value();
         CustomizedExceptionHandlerResponse error = new CustomizedExceptionHandlerResponse(
                 code, message, time);
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+
+        return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, status);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomizedExceptionHandlerResponse> handleArgumentNotValidException(
             MethodArgumentNotValidException exception) {
-        String message = Objects.requireNonNull(exception.getFieldError()).getDefaultMessage();
-        return exceptionResponse(message);
+        String message = exception.getFieldError().getDefaultMessage();
+        int code = HttpStatus.BAD_REQUEST.value();
+        return exceptionResponse(code, message, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CustomizedExceptionHandlerResponse> exceptionHandler(
             Exception exception) {
         String message = exception.getMessage();
-        return exceptionResponse(message);
+        int code = HttpStatus.CONFLICT.value();
+        HttpStatus status = HttpStatus.CONFLICT;
+        if (exception.getClass().getName().contains("NoSuchElement")) {
+            code = HttpStatus.NOT_FOUND.value();
+            status = HttpStatus.NOT_FOUND;
+        }
+        return exceptionResponse(code, message, status);
     }
 }

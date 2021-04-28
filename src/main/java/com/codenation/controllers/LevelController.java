@@ -1,5 +1,7 @@
 package com.codenation.controllers;
 
+import com.codenation.dtos.EventDTOWithLog;
+import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.services.LevelServiceImpl;
 import io.swagger.annotations.Api;
@@ -36,5 +38,14 @@ public class LevelController {
         } else {
             return ResponseEntity.status(HttpStatus.CREATED).body(levelCreated);
         }
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Atualiza um level por id")
+    public ResponseEntity<Level> updateById(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid Level level) {
+        Level updatedLevel = levelService.update(level, id);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedLevel);
     }
 }

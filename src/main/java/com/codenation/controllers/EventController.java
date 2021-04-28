@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.InstanceAlreadyExistsException;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.time.LocalDate;
@@ -55,7 +56,7 @@ public class EventController {
 
     @PostMapping
     @ApiOperation(value = "Cria um novo evento")
-    public ResponseEntity<CreateEventDTO> register(@RequestBody @Valid Event event) {
+    public ResponseEntity<CreateEventDTO> register(@RequestBody @Valid Event event) throws InstanceAlreadyExistsException {
         Event eventCreated = eventService.register(event);
         if (eventCreated == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -67,8 +68,6 @@ public class EventController {
     @GetMapping
     @ApiOperation(value = "Retorna todos os eventos")
     public ResponseEntity<List<EventDTO>> getAll(
-            @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
-            @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
             @RequestParam(value = "description", required = false, defaultValue = "") String description,
             @RequestParam(value = "origin", required = false, defaultValue = "") String origin,
             @RequestParam(value = "date", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
@@ -77,10 +76,28 @@ public class EventController {
             @RequestParam(value = "level", required = false, defaultValue = "") String level,
             @RequestParam(value = "order", required = false, defaultValue = "id") String order,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "20") Integer size,
             Pageable pageable) {
         return ResponseEntity.status(HttpStatus.OK).body(eventService.filterAndSort(description,
                 origin, date, quantity, email, level, order, sort, page, size, pageable)
                 .stream().map(this::toEventDTO).collect(Collectors.toList()));
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Deleta um evento por id")
+    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+        eventService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body("Evento apagado com sucesso!");
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Atualiza um evento por id")
+    public ResponseEntity<EventDTOWithLog> updateById(
+            @PathVariable("id") Long id,
+            @RequestBody @Valid Event event) {
+        Event updatedEvent = eventService.update(event, id);
+        return ResponseEntity.status(HttpStatus.OK).body(toEventDTOWithLog(updatedEvent));
     }
 
 }

@@ -1,19 +1,23 @@
 package com.codenation.services;
 
+import com.codenation.enums.SearchOperation;
 import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.models.User;
+import com.codenation.utils.EventSpecification;
 import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.codenation.utils.SearchCriteria;
+import lombok.AllArgsConstructor;
+import org.mapstruct.BeanMapping;
+import org.mapstruct.Mapper;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
-import java.sql.Timestamp;
+import javax.management.InstanceAlreadyExistsException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,7 +49,12 @@ public class EventServiceImpl implements EventService {
         return email;
     }
 
-    public Event register(Event event) {
+    @Override
+    public Event save(Event event) {
+        return this.eventRepository.save(event);
+    }
+
+    public Event register(Event event) throws InstanceAlreadyExistsException {
         Long levelId = event.getLevel().getId();
         User user = userRepository.findByEmail(getLoggedUserEmail())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
@@ -56,7 +65,7 @@ public class EventServiceImpl implements EventService {
                         event.getDescription(), event.getLog(), event.getOrigin(), event.getDate(),
                         event.getQuantity(), level.getDescription());
         if (!eventsList.isEmpty()) {
-            throw new IllegalArgumentException("Evento já cadastrado");
+            throw new InstanceAlreadyExistsException("Evento já cadastrado");
         }
         event.setUser(user);
         event.setLevel(level);
@@ -70,10 +79,55 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public Event update(Event event, Long id) {
+        Event oldEvent = eventRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+        Level level = levelRepository.findById(event.getLevel().getId())
+                .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!oldEvent.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
+        oldEvent.setDescription(event.getDescription());
+        oldEvent.setLog(event.getLog());
+        oldEvent.setOrigin(event.getOrigin());
+        oldEvent.setDate(event.getDate());
+        oldEvent.setQuantity(event.getQuantity());
+        oldEvent.setLevel(level);
+        return eventRepository.save(oldEvent);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        Event event = eventRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!event.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
+        eventRepository.delete(event);
+    }
+
+    @Override
+    public List<Event> getAll(Pageable pageable) {
+        return this.eventRepository.findAll(pageable).getContent();
+    }
+
+    @Override
     public List<Event> filterAndSort(String description, String origin, LocalDate date, Integer quantity,
                                      String email, String level, String order, String sort, Integer page,
                                      Integer size, Pageable pageable) {
-        sort = sort.toUpperCase();
+        EventSpecification filter = new EventSpecification();
+        filter.add(new SearchCriteria("description", null, description, SearchOperation.LIKE));
+        filter.add(new SearchCriteria("origin", null, origin, SearchOperation.LIKE));
+        filter.add(new SearchCriteria("user", "email", email, SearchOperation.LIKE));
+        filter.add(new SearchCriteria("level", "description", level, SearchOperation.LIKE));
+        if (date != null) {
+            filter.add(new SearchCriteria("date", null, date, SearchOperation.EQUAL));
+        }
+        if (quantity != null) {
+            filter.add(new SearchCriteria("quantity", null, quantity, SearchOperation.EQUAL));
+        }
         if (order.equals("user")) {
             order = "user.email";
         } else if (order.equals("level")) {
@@ -83,8 +137,6 @@ public class EventServiceImpl implements EventService {
         if (sort.equals("DESC")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
-        List<Event> teste = eventRepository.filterAndSort(description, origin, date, quantity, email, level, pageable).getContent();
-        return teste;
+        return this.eventRepository.findAll(filter, pageable).getContent();
     }
-
 }
