@@ -81,13 +81,10 @@ public class EventServiceImpl implements EventService {
         if (!oldEvent.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
-        oldEvent.setDescription(event.getDescription());
-        oldEvent.setLog(event.getLog());
-        oldEvent.setOrigin(event.getOrigin());
-        oldEvent.setDate(event.getDate());
-        oldEvent.setQuantity(event.getQuantity());
-        oldEvent.setLevel(level);
-        return eventRepository.save(oldEvent);
+        event.setId(id);
+        event.setUser(oldEvent.getUser());
+        event.setLevel(level);
+        return eventRepository.save(event);
     }
 
     @Override
