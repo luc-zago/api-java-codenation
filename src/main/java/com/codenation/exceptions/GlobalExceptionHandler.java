@@ -37,6 +37,9 @@ public class GlobalExceptionHandler {
         if (exception.getClass().getName().contains("NoSuchElement")) {
             code = HttpStatus.NOT_FOUND.value();
             status = HttpStatus.NOT_FOUND;
+        } else if (exception.getMessage().contains("autorizado")) {
+            code = HttpStatus.UNAUTHORIZED.value();
+            status = HttpStatus.UNAUTHORIZED;
         }
         return exceptionResponse(code, message, status);
     }
