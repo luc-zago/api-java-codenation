@@ -16,4 +16,5 @@ public interface EventRepository extends JpaRepository<Event, Long>, JpaSpecific
 
     List<Event> findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
             String desc, String log, String origin, LocalDate date, Integer qtt, String  level);
+
 }

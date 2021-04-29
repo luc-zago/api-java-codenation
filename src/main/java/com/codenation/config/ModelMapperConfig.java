@@ -14,8 +14,8 @@ public class ModelMapperConfig {
         ModelMapper model = new ModelMapper();
 
         model.createTypeMap(Event.class, CreateEventDTO.class)
-                .<String>addMapping(src -> src.getLevel().getDescription(),
-                        (desc, value) -> desc.setLevel(value));
+                .addMapping(src -> src.getLevel().getDescription(),
+                        CreateEventDTO::setLevel);
 
         return model;
     }

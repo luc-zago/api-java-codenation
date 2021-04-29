@@ -1,8 +1,6 @@
 package com.codenation.controllers;
 
-import com.codenation.dtos.LoginDTO;
 import com.codenation.dtos.UserDTO;
-import com.codenation.models.Level;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 
@@ -16,11 +14,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/login")
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class LoginController {
 
     private final UserRepository userRepository;
@@ -41,23 +39,13 @@ public class LoginController {
         } else {
             email = principal.toString();
         }
-
-        User loggedUser = userRepository.findByEmail(email)
+        return userRepository.findByEmail(email)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        return loggedUser;
     }
 
     @GetMapping
     @ApiOperation(value = "Retorna o email, nome e sobrenome do usuário logado")
     public ResponseEntity<UserDTO> login() {
         return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(this.getLoggedUser()));
-        // () -> ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null)
-    }
-
-    @PutMapping
-    @ApiOperation(value = "Atualiza os dados do usuário logado")
-    public ResponseEntity<UserDTO> updateLoggedUser() {
-        User user = this.getLoggedUser();
-        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(user));
     }
 }

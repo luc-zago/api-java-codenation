@@ -1,9 +1,7 @@
 package com.codenation.models;
 
 import com.fasterxml.jackson.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -12,10 +10,9 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Entity
-@Data
-@Table(name = "events")
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@Setter
+@Table(name = "EVENTS")
 public class Event {
 
     @Id

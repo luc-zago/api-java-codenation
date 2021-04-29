@@ -9,9 +9,7 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import com.codenation.utils.SearchCriteria;
-import lombok.AllArgsConstructor;
-import org.mapstruct.BeanMapping;
-import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,12 +21,19 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-@AllArgsConstructor
 public class EventServiceImpl implements EventService {
 
-    final private EventRepository eventRepository;
-    final private UserRepository userRepository;
-    final private LevelRepository levelRepository;
+    private final EventRepository eventRepository;
+    private final UserRepository userRepository;
+    private final LevelRepository levelRepository;
+
+    @Autowired
+    public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository,
+                            LevelRepository levelRepository) {
+        this.eventRepository = eventRepository;
+        this.userRepository = userRepository;
+        this.levelRepository = levelRepository;
+    }
 
     private String getLoggedUserEmail() {
         String email;
@@ -42,18 +47,13 @@ public class EventServiceImpl implements EventService {
         return email;
     }
 
-    @Override
-    public Event save(Event event) {
-        return this.eventRepository.save(event);
-    }
-
     public Event register(Event event) throws InstanceAlreadyExistsException {
         Long levelId = event.getLevel().getId();
-        User user = this.userRepository.findByEmail(getLoggedUserEmail())
+        User user = userRepository.findByEmail(getLoggedUserEmail())
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        Level level = this.levelRepository.findById(levelId)
+        Level level = levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        List<Event> eventsList = this.eventRepository
+        List<Event> eventsList = eventRepository
                 .findAllByDescriptionAndLogAndOriginAndDateAndQuantityAndLevelDescription(
                         event.getDescription(), event.getLog(), event.getOrigin(), event.getDate(),
                         event.getQuantity(), level.getDescription());
@@ -62,12 +62,12 @@ public class EventServiceImpl implements EventService {
         }
         event.setUser(user);
         event.setLevel(level);
-        return save(event);
+        return eventRepository.save(event);
     }
 
     @Override
     public Event findById(Long id) {
-        return this.eventRepository.findById(id)
+        return eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
     }
 
@@ -81,13 +81,10 @@ public class EventServiceImpl implements EventService {
         if (!oldEvent.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
-        oldEvent.setDescription(event.getDescription());
-        oldEvent.setLog(event.getLog());
-        oldEvent.setOrigin(event.getOrigin());
-        oldEvent.setDate(event.getDate());
-        oldEvent.setQuantity(event.getQuantity());
-        oldEvent.setLevel(level);
-        return eventRepository.save(oldEvent);
+        event.setId(id);
+        event.setUser(oldEvent.getUser());
+        event.setLevel(level);
+        return eventRepository.save(event);
     }
 
     @Override
@@ -99,11 +96,6 @@ public class EventServiceImpl implements EventService {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
         eventRepository.delete(event);
-    }
-
-    @Override
-    public List<Event> getAll(Pageable pageable) {
-        return this.eventRepository.findAll(pageable).getContent();
     }
 
     @Override
@@ -127,7 +119,6 @@ public class EventServiceImpl implements EventService {
             order = "level.description";
         }
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
-        sort = sort.toUpperCase();
         if (sort.equals("DESC")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }

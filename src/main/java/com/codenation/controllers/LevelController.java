@@ -1,9 +1,6 @@
 package com.codenation.controllers;
 
-import com.codenation.dtos.EventDTOWithLog;
-import com.codenation.models.Event;
 import com.codenation.models.Level;
-import com.codenation.models.User;
 import com.codenation.services.LevelServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +25,7 @@ public class LevelController {
     @GetMapping
     @ApiOperation(value = "Retorna todos os tipos de level")
     public ResponseEntity<List<Level>> levels() {
-        return ResponseEntity.status(HttpStatus.OK).body(this.levelService.getAll());
+        return ResponseEntity.status(HttpStatus.OK).body(levelService.getAll());
     }
 
     @PostMapping
@@ -43,7 +40,7 @@ public class LevelController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Atualiza um level por id")
+    @ApiOperation(value = "Atualiza um level com base no 'id' passado pela url")
     public ResponseEntity<Level> updateById(
             @PathVariable("id") Long id,
             @RequestBody @Valid Level level) {

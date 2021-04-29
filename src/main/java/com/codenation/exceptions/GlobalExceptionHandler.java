@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -16,13 +17,14 @@ public class GlobalExceptionHandler {
         LocalDateTime time = LocalDateTime.now();
         CustomizedExceptionHandlerResponse error = new CustomizedExceptionHandlerResponse(
                 code, message, time);
-        return new ResponseEntity<CustomizedExceptionHandlerResponse>(error, status);
+
+        return new ResponseEntity<>(error, status);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomizedExceptionHandlerResponse> handleArgumentNotValidException(
             MethodArgumentNotValidException exception) {
-        String message = exception.getFieldError().getDefaultMessage();
+        String message = Objects.requireNonNull(exception.getFieldError()).getDefaultMessage();
         int code = HttpStatus.BAD_REQUEST.value();
         return exceptionResponse(code, message, HttpStatus.BAD_REQUEST);
     }
@@ -36,6 +38,9 @@ public class GlobalExceptionHandler {
         if (exception.getClass().getName().contains("NoSuchElement")) {
             code = HttpStatus.NOT_FOUND.value();
             status = HttpStatus.NOT_FOUND;
+        } else if (exception.getMessage().contains("autorizado")) {
+            code = HttpStatus.UNAUTHORIZED.value();
+            status = HttpStatus.UNAUTHORIZED;
         }
         return exceptionResponse(code, message, status);
     }

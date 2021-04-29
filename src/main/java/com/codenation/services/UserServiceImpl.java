@@ -3,7 +3,7 @@ package com.codenation.services;
 import com.codenation.enums.Authority;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,10 +16,14 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    final private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     private PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -39,14 +43,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) throws InstanceAlreadyExistsException {
-        Optional<User> checkUser = this.userRepository.findByEmail(user.getEmail());
+        Optional<User> checkUser = userRepository.findByEmail(user.getEmail());
 
         if (checkUser.isPresent()) {
             throw new InstanceAlreadyExistsException("Usuário já cadastrado");
         } else {
             user.setPassword(this.passwordEncoder().encode(user.getPassword()));
             user.setAuthority(Authority.USER);
-            return this.save(user);
+            return userRepository.save(user);
         }
     }
 
@@ -65,13 +69,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User save(User user) {
-        return this.userRepository.save(user);
-    }
-
-    @Override
     public List<User> getAll() {
-        return this.userRepository.findAll();
+        return userRepository.findAll();
     }
 
 }

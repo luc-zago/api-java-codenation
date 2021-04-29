@@ -26,15 +26,17 @@ public class Authorization extends AuthorizationServerConfigurerAdapter {
     @Value("${authorization.client.scopes}")
     private String[] CLIENT_SCOPES;
 
-    private Integer ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 20;
-    private Integer REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60;
     // libera acesso as requisições do oauth2 /token_key, /check_token
 
+    private final AuthenticationManager authenticationManager;
+
     @Autowired
-    private AuthenticationManager authenticationManager;
+    public Authorization(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+    }
 
     @Override
-    public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
+    public void configure(AuthorizationServerSecurityConfigurer security) {
         security.tokenKeyAccess("permitAll()")
                 .checkTokenAccess("isAuthenticated()")
                 .allowFormAuthenticationForClients();
@@ -43,6 +45,10 @@ public class Authorization extends AuthorizationServerConfigurerAdapter {
     // definindo com quem fica armazenado os tokens para acesso
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+
+        int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 20;
+        int REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60;
+
         clients.inMemory()
                 .withClient(CLIENT_ID)
                 .secret(new BCryptPasswordEncoder().encode(CLIENT_SECRET))
@@ -54,7 +60,7 @@ public class Authorization extends AuthorizationServerConfigurerAdapter {
 
     // definindo o gerenciador de authenticação
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints.authenticationManager(authenticationManager)
                 .allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
     }

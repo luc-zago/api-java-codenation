@@ -1,9 +1,8 @@
 package com.codenation.services;
 
-import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.repositories.LevelRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.management.InstanceAlreadyExistsException;
@@ -11,22 +10,21 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
-@AllArgsConstructor
 public class LevelServiceImpl implements LevelService {
 
-    final private LevelRepository levelRepository;
+    private final LevelRepository levelRepository;
 
-    @Override
-    public Level save(Level object) {
-        return this.levelRepository.save(object);
+    @Autowired
+    public LevelServiceImpl(LevelRepository levelRepository) {
+        this.levelRepository = levelRepository;
     }
 
     @Override
     public Level register(Level level) throws InstanceAlreadyExistsException {
         String description = level.getDescription();
-        Level checkLevel = this.levelRepository.findByDescription(description).orElse(null);
+        Level checkLevel = levelRepository.findByDescription(description).orElse(null);
         if (checkLevel == null) {
-            return save(level);
+            return levelRepository.save(level);
         } else {
             throw new InstanceAlreadyExistsException("Level já cadastrado");
         }    }

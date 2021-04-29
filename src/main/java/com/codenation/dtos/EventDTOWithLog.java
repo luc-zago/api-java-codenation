@@ -1,11 +1,13 @@
 package com.codenation.dtos;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 public class EventDTOWithLog {
 
@@ -15,7 +17,7 @@ public class EventDTOWithLog {
     private String origin;
     private LocalDate date;
     private Integer quantity;
-    private String user;
-    private String level;
+    private String userEmail;
+    private String levelDescription;
 
 }

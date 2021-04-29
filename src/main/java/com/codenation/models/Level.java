@@ -1,13 +1,15 @@
 package com.codenation.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 
 @Entity
-@Data
-@Table(name = "levels")
+@Getter
+@Setter
+@Table(name = "LEVELS")
 public class Level {
 
     @Id
