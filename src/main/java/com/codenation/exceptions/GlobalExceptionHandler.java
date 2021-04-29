@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -23,7 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomizedExceptionHandlerResponse> handleArgumentNotValidException(
             MethodArgumentNotValidException exception) {
-        String message = exception.getFieldError().getDefaultMessage();
+        String message = Objects.requireNonNull(exception.getFieldError()).getDefaultMessage();
         int code = HttpStatus.BAD_REQUEST.value();
         return exceptionResponse(code, message, HttpStatus.BAD_REQUEST);
     }
