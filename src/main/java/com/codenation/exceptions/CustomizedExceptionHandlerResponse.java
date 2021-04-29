@@ -11,6 +11,6 @@ import java.time.LocalDateTime;
 public class CustomizedExceptionHandlerResponse {
 
     private int StatusCode;
-    private String message;
+    private String error;
     private LocalDateTime timestamp;
 }
