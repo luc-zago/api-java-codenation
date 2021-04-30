@@ -2,6 +2,7 @@ package com.codenation.controllers;
 
 import com.codenation.dtos.UserDTO;
 import com.codenation.dtos.UserDTOWithId;
+import com.codenation.dtos.UserEmailDTO;
 import com.codenation.services.UserServiceImpl;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,8 @@ public class UserController {
         return modelMapper.map(user, UserDTOWithId.class);
     }
 
+    private UserEmailDTO toUserEmail(User user) { return modelMapper.map(user, UserEmailDTO.class); }
+
     @PostMapping
     @ApiOperation(value = "Cria um novo usuário")
     public ResponseEntity<UserDTO> register(@RequestBody @Valid User user) throws InstanceAlreadyExistsException {
@@ -52,6 +55,13 @@ public class UserController {
     public ResponseEntity<List<UserDTOWithId>> getAll(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll()
             .stream().map(this::toUserWithId).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/emails")
+    @ApiOperation(value = "Retorna o email de todos os usuários")
+    public ResponseEntity<List<UserEmailDTO>> getAllEmail(){
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll()
+                .stream().map(this::toUserEmail).collect(Collectors.toList()));
     }
 
     @PutMapping
