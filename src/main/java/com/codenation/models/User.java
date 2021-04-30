@@ -36,7 +36,7 @@ public class User {
 
     @NotEmpty(message = "O campo 'senha' é obrigatório")
     @Column(length = 100)
-    @Size(min = 6, message = "A senha deve ter no mínimo 6 caracteres")
+    @Size(min = 5, message = "A senha deve ter no mínimo 5 caracteres")
     private String password;
 
     @Enumerated(EnumType.STRING)
