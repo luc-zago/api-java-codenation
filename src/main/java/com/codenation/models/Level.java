@@ -17,7 +17,7 @@ public class Level {
     private Long id;
 
     @NotEmpty(message = "O campo 'descrição' é obrigatório")
-    @Column(length = 10)
+    @Column(length = 15, message = "O campo 'descrição' não pode ter mais de 15 caracteres")
     private String description;
 
 }
