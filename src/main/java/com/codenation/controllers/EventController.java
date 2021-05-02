@@ -5,6 +5,7 @@ import com.codenation.dtos.EventDTO;
 import com.codenation.dtos.EventDTOWithLog;
 import com.codenation.models.Event;
 import com.codenation.services.EventServiceImpl;
+import com.codenation.utils.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -94,9 +95,10 @@ public class EventController {
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Deleta um evento com base no 'id' passado pela url")
-    public ResponseEntity<String> deleteById(@PathVariable("id") Long id) {
+    public ResponseEntity<Response> deleteById(@PathVariable("id") Long id) {
         eventService.deleteById(id);
-        return ResponseEntity.status(HttpStatus.OK).body("Evento apagado com sucesso!");
+        Response response = new Response("Evento apagado com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @PutMapping("/{id}")
