@@ -1,6 +1,7 @@
 package com.codenation.services;
 
 import com.codenation.enums.Authority;
+import com.codenation.enums.UserStatus;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,7 @@ public class UserServiceImpl implements UserService {
         } else {
             user.setPassword(this.passwordEncoder().encode(user.getPassword()));
             user.setAuthority(Authority.USER);
+            user.setStatus(UserStatus.ACTIVE);
             return userRepository.save(user);
         }
     }
