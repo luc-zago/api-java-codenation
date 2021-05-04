@@ -38,7 +38,7 @@ public class Event {
     private LocalDate date;
 
     @NotNull(message = "O campo 'quantidade' é obrigatório")
-    @Min(value = 1, message = "O campo 'quantity' deve ter no mínimo 1'")
+    @Min(value = 1, message = "O campo 'quantidade' não pode ser inferior à 1")
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
