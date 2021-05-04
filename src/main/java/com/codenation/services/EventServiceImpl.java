@@ -1,6 +1,7 @@
 package com.codenation.services;
 
 import com.codenation.enums.SearchOperation;
+import com.codenation.enums.UserStatus;
 import com.codenation.models.Event;
 import com.codenation.models.Level;
 import com.codenation.models.User;
@@ -49,7 +50,7 @@ public class EventServiceImpl implements EventService {
 
     public Event register(Event event) throws InstanceAlreadyExistsException {
         Long levelId = event.getLevel().getId();
-        User user = userRepository.findByEmail(getLoggedUserEmail())
+        User user = userRepository.findByEmailAndStatus(getLoggedUserEmail(), UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
@@ -119,7 +120,7 @@ public class EventServiceImpl implements EventService {
             order = "level.description";
         }
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
-        if (sort.equals("DESC")) {
+        if (sort.equalsIgnoreCase("desc")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
         return this.eventRepository.findAll(filter, pageable).getContent();
