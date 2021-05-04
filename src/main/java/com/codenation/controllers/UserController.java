@@ -74,17 +74,14 @@ public class UserController {
     @ApiOperation(value = "Retorna o email de todos os usuários")
     public ResponseEntity<List<UserEmailDTO>> getAllEmail(
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
-            @RequestParam(value = "firstname", required = false, defaultValue = "") String firstName,
-            @RequestParam(value = "lastname", required = false, defaultValue = "") String lastName,
             @RequestParam(value = "status", required = false, defaultValue = "active") UserStatus status,
-            @RequestParam(value = "order", required = false, defaultValue = "id") String order,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
             Pageable pageable
     ){
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll(email, firstName, lastName,
-                status, order, sort, page, size, pageable)
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll(email, "", "",
+                status, "email", sort, page, size, pageable)
                 .stream().map(this::toUserEmail).collect(Collectors.toList()));
     }
 

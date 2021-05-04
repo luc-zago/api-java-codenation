@@ -1,5 +1,6 @@
 package com.codenation.dtos;
 
+import com.codenation.enums.UserStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,5 +9,6 @@ import lombok.Setter;
 public class UserEmailDTO {
 
     private String email;
+    private UserStatus status;
 
 }
