@@ -97,7 +97,7 @@ public class UserController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Atualiza a autoridade de um usuário")
     public ResponseEntity<UserDTO> changeAuthority(@PathVariable("id") Long id,
-                                                   @RequestBody Authority authority) {
+                                                   @RequestBody String authority) {
         User user = userService.changeAuthority(id, authority);
         return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(user));
     }

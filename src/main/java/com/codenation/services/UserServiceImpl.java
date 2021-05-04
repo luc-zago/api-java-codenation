@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User changeAuthority(Long id, Authority authority) {
+    public User changeAuthority(Long id, String authority) {
         User user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         User loggedUser = userRepository.findByEmailAndStatus(getLoggedUserEmail(), UserStatus.ACTIVE)
@@ -95,7 +95,8 @@ public class UserServiceImpl implements UserService {
         if (!Objects.requireNonNull(loggedUser).getAuthority().equals(Authority.ADMIN)) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
-        user.setAuthority(authority);
+        Authority newAuthority = Authority.valueOf(authority.toUpperCase());
+        user.setAuthority(newAuthority);
         return userRepository.save(user);
     }
 
