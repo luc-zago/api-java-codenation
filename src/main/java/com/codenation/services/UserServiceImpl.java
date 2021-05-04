@@ -102,8 +102,9 @@ public class UserServiceImpl implements UserService {
     public void inactiveById(Long id) {
         User user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        String email = getLoggedUserEmail();
-        if (!user.getEmail().equals(email) || !email.equals("admin@admin.com")) {
+        User loggedUser = userRepository.findByEmailAndStatus(getLoggedUserEmail(), UserStatus.ACTIVE).get();
+        if (!user.getEmail().equals(getLoggedUserEmail())
+                && !loggedUser.getAuthority().equals(Authority.ADMIN)) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
         user.setStatus(UserStatus.INACTIVE);
