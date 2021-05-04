@@ -1,7 +1,6 @@
 package com.codenation.services;
 
 import com.codenation.enums.Authority;
-import com.codenation.enums.UserStatus;
 import com.codenation.models.User;
 import org.springframework.data.domain.Pageable;
 
@@ -12,7 +11,7 @@ public interface UserService {
 
     User register(User user) throws InstanceAlreadyExistsException;
     User update(User user);
-    List<User> getAll(String email, String firstName, String lastName, UserStatus status,
+    List<User> getAll(String email, String firstName, String lastName, String status,
                       String order, String sort, Integer page, Integer size, Pageable pageable);
     User changeAuthority(Long id, Authority authority);
 }

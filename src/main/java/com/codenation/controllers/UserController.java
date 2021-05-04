@@ -60,7 +60,7 @@ public class UserController {
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
             @RequestParam(value = "firstname", required = false, defaultValue = "") String firstName,
             @RequestParam(value = "lastname", required = false, defaultValue = "") String lastName,
-            @RequestParam(value = "status", required = false, defaultValue = "active") UserStatus status,
+            @RequestParam(value = "status", required = false, defaultValue = "active") String status,
             @RequestParam(value = "order", required = false, defaultValue = "id") String order,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
@@ -76,7 +76,7 @@ public class UserController {
     @ApiOperation(value = "Retorna o email de todos os usuários")
     public ResponseEntity<List<UserEmailDTO>> getAllEmail(
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
-            @RequestParam(value = "status", required = false, defaultValue = "active") UserStatus status,
+            @RequestParam(value = "status", required = false, defaultValue = "active") String status,
             @RequestParam(value = "sort", required = false, defaultValue = "asc") String sort,
             @RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "20") Integer size,
@@ -95,7 +95,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Atualiza a autoridade de um usuário pelo 'id' passado via url")
+    @ApiOperation(value = "Atualiza a autoridade de um usuário")
     public ResponseEntity<UserDTO> changeAuthority(@PathVariable("id") Long id,
                                                    @RequestBody Authority authority) {
         User user = userService.changeAuthority(id, authority);

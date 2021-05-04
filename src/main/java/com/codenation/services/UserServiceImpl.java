@@ -75,14 +75,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll(String email, String firstName, String lastName, UserStatus status,
+    public List<User> getAll(String email, String firstName, String lastName, String status,
                              String order, String sort, Integer page, Integer size, Pageable pageable) {
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
         if (sort.equalsIgnoreCase("desc")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
+        UserStatus searchStatus = UserStatus.valueOf(status.toLowerCase());
         return userRepository.findAllByEmailContainsAndFirstnameContainsAndLastnameContainsAndStatus(email,
-                firstName, lastName, status, pageable).getContent();
+                firstName, lastName, searchStatus, pageable).getContent();
     }
 
     @Override
