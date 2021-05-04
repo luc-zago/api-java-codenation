@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.management.InstanceAlreadyExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -47,9 +48,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User register(User user) throws InstanceAlreadyExistsException {
-        Optional<User> checkUser = userRepository.findByEmail(user.getEmail());
+        Optional<User> checkUser = userRepository.findByEmailAndStatus(user.getEmail(), UserStatus.ACTIVE);
 
-        if (checkUser.isPresent() && checkUser.get().getStatus().equals(UserStatus.ACTIVE)) {
+        if (checkUser.isPresent()) {
             throw new InstanceAlreadyExistsException("Usuário já cadastrado");
         } else {
             user.setPassword(this.passwordEncoder().encode(user.getPassword()));
@@ -62,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User update(User user) {
         String email = getLoggedUserEmail();
-        User oldUser = userRepository.findByEmail(email)
+        User oldUser = userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         if (!email.equals(user.getEmail())) {
             throw new IllegalArgumentException("Usuário inválido");
@@ -84,8 +85,21 @@ public class UserServiceImpl implements UserService {
                 firstName, lastName, status, pageable).getContent();
     }
 
+    @Override
+    public User changeAuthority(Long id, Authority authority) {
+        User user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        User loggedUser = userRepository.findByEmailAndStatus(getLoggedUserEmail(), UserStatus.ACTIVE)
+                .orElse(null);
+        if (!Objects.requireNonNull(loggedUser).getAuthority().equals(Authority.ADMIN)) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
+        user.setAuthority(authority);
+        return userRepository.save(user);
+    }
+
     public void inactiveById(Long id) {
-        User user = userRepository.findById(id)
+        User user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         String email = getLoggedUserEmail();
         if (!user.getEmail().equals(email) || !email.equals("admin@admin.com")) {
@@ -94,4 +108,5 @@ public class UserServiceImpl implements UserService {
         user.setStatus(UserStatus.INACTIVE);
         userRepository.save(user);
     }
+
 }

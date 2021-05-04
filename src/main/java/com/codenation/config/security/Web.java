@@ -1,6 +1,7 @@
 package com.codenation.config.security;
 
 import com.codenation.enums.Authority;
+import com.codenation.enums.UserStatus;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import com.codenation.services.LoginServiceImpl;
@@ -50,11 +51,13 @@ public class Web extends WebSecurityConfigurerAdapter {
                     .firstname(FIRST_NAME)
                     .lastname(LAST_NAME)
                     .authority(Authority.ADMIN)
+                    .status(UserStatus.ACTIVE)
                     .password(passwordEncoder().encode(USER_PASSWORD))
                     .build());
         }
         auth.userDetailsService(
-                email -> userRepository.findByEmail(email).map(LoginServiceImpl::new).orElse(null)
+                email -> userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+                        .map(LoginServiceImpl::new).orElse(null)
         ).passwordEncoder(passwordEncoder());
     }
 

@@ -3,6 +3,7 @@ package com.codenation.controllers;
 import com.codenation.dtos.UserDTO;
 import com.codenation.dtos.UserDTOWithId;
 import com.codenation.dtos.UserEmailDTO;
+import com.codenation.enums.Authority;
 import com.codenation.enums.UserStatus;
 import com.codenation.services.UserServiceImpl;
 import com.codenation.utils.Response;
@@ -91,6 +92,14 @@ public class UserController {
     public ResponseEntity<UserDTO> update(@RequestBody @Valid User user) {
         User updatedUser = userService.update(user);
         return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(updatedUser));
+    }
+
+    @PutMapping("/{id}")
+    @ApiOperation(value = "Atualiza a autoridade de um usuário pelo 'id' passado via url")
+    public ResponseEntity<UserDTO> changeAuthority(@PathVariable("id") Long id,
+                                                   @RequestBody Authority authority) {
+        User user = userService.changeAuthority(id, authority);
+        return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(user));
     }
 
     @DeleteMapping("/{id}")
