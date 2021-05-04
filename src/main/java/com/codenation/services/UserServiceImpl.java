@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
         if (sort.equalsIgnoreCase("desc")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
-        UserStatus searchStatus = UserStatus.valueOf(status.toLowerCase());
+        UserStatus searchStatus = UserStatus.valueOf(status.toUpperCase());
         return userRepository.findAllByEmailContainsAndFirstnameContainsAndLastnameContainsAndStatus(email,
                 firstName, lastName, searchStatus, pageable).getContent();
     }
