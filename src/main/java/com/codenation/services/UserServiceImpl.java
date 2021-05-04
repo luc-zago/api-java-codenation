@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
     public User register(User user) throws InstanceAlreadyExistsException {
         Optional<User> checkUser = userRepository.findByEmail(user.getEmail());
 
-        if (checkUser.isPresent()) {
+        if (checkUser.isPresent() && checkUser.get().getStatus().equals(UserStatus.ACTIVE)) {
             throw new InstanceAlreadyExistsException("Usuário já cadastrado");
         } else {
             user.setPassword(this.passwordEncoder().encode(user.getPassword()));
@@ -84,4 +84,14 @@ public class UserServiceImpl implements UserService {
                 firstName, lastName, status, pageable).getContent();
     }
 
+    public void inactiveById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
+        String email = getLoggedUserEmail();
+        if (!user.getEmail().equals(email) || !email.equals("admin@admin.com")) {
+            throw new IllegalArgumentException("Usuário não autorizado");
+        }
+        user.setStatus(UserStatus.INACTIVE);
+        userRepository.save(user);
+    }
 }

@@ -5,6 +5,7 @@ import com.codenation.dtos.UserDTOWithId;
 import com.codenation.dtos.UserEmailDTO;
 import com.codenation.enums.UserStatus;
 import com.codenation.services.UserServiceImpl;
+import com.codenation.utils.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -90,5 +91,13 @@ public class UserController {
     public ResponseEntity<UserDTO> update(@RequestBody @Valid User user) {
         User updatedUser = userService.update(user);
         return ResponseEntity.status(HttpStatus.OK).body(toUserDTO(updatedUser));
+    }
+
+    @DeleteMapping("/{id}")
+    @ApiOperation(value = "Transforma um usuário em 'inativo' com base no 'id' passado pela url")
+    public ResponseEntity<Response> inactiveById(@PathVariable("id") Long id) {
+        userService.inactiveById(id);
+        Response response = new Response("Usuário apagado com sucesso");
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
