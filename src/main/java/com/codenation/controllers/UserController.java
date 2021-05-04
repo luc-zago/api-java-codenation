@@ -53,7 +53,16 @@ public class UserController {
     }
     
     @GetMapping
-    @ApiOperation(value = "Retorna todos os usuários")
+    @ApiOperation(value = "Retorna todos os usuários ativos. O retorno pode ser filtrado e ordenado de " +
+            "acordo com os seguintes parâmetros que podem ser passados via url: a) email: email do usuário; " +
+            "b) firstname: primeiro nome do usuário; c) lastname: sobrenome do usuário; d) status: status do " +
+            "usuário (active ou inactive); Para retornar os usuários inativos, usar o parâmetro 'status' com o " +
+            "valor 'inactive'. Os usuários também podem ser ordenados por qualquer um dos atributos " +
+            "mencionados através do parâmetro 'order', que também é passado via url e recebe como valor o " +
+            "nome do atributo que deve ser tomado como referência (Ex: email, firstname, lastname). Se " +
+            "nenhum parâmetro é passado, o retorno é ordenado pelo atributo 'id' em ordem ascendente. Para " +
+            "alterar o retorno para ordem descendente, deve ser utilizado o parâmetro 'sort' via url com o " +
+            "valor 'desc'.")
     public ResponseEntity<List<UserDTOWithId>> getAll(
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
             @RequestParam(value = "firstname", required = false, defaultValue = "") String firstName,
@@ -71,7 +80,15 @@ public class UserController {
     }
 
     @GetMapping("/emails")
-    @ApiOperation(value = "Retorna o email de todos os usuários")
+    @ApiOperation(value = "Retorna o email de todos os usuários ativos. O retorno pode ser filtrado e " +
+            "ordenado de acordo com os seguintes parâmetros que podem ser passados via url: a) email: email " +
+            "do usuário; b) firstname: primeiro nome do usuário; c) lastname: sobrenome do usuário; Para " +
+            "retornar os usuários inativos, usar o parâmetro 'status' com o valor 'inactive'. Os " +
+            "usuários também podem ser ordenados por qualquer um dos atributos mencionados através do " +
+            "parâmetro 'order', que também é passado via url e recebe como valor o nome do atributo que " +
+            "deve ser tomado como referência (Ex: email, firstname, lastname). Se nenhum parâmetro é passado," +
+            " o retorno é ordenado pelo atributo 'id' em ordem ascendente. Para alterar o retorno para ordem " +
+            "descendente, deve ser utilizado o parâmetro 'sort' via url com o valor 'desc'.")
     public ResponseEntity<List<UserEmailDTO>> getAllEmail(
             @RequestParam(value = "email", required = false, defaultValue = "") String email,
             @RequestParam(value = "status", required = false, defaultValue = "active") String status,
@@ -93,7 +110,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @ApiOperation(value = "Atualiza a autoridade de um usuário")
+    @ApiOperation(value = "Altera a autoridade de um usuário identificado pelo 'id' passado via url " +
+            " com base no 'body' enviado na requisição com a chave 'authority' e os valores 'USER' ou 'ADMIN'. " +
+            "Os valores obrigatoriamente devem estar em caixa alta.")
     public ResponseEntity<UserDTO> changeAuthority(@PathVariable("id") Long id,
                                                    @RequestBody User user) {
         User tUser = userService.changeAuthority(id, user.getAuthority());
