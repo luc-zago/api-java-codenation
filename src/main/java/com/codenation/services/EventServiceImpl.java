@@ -119,7 +119,7 @@ public class EventServiceImpl implements EventService {
             order = "level.description";
         }
         pageable = PageRequest.of(page, size, Sort.by(order).ascending());
-        if (sort.equals("DESC")) {
+        if (sort.equalsIgnoreCase("desc")) {
             pageable = PageRequest.of(page, size, Sort.by(order).descending());
         }
         return this.eventRepository.findAll(filter, pageable).getContent();

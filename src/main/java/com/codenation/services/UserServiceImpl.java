@@ -5,6 +5,9 @@ import com.codenation.enums.UserStatus;
 import com.codenation.models.User;
 import com.codenation.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -71,8 +74,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<User> getAll(String email, String firstName, String lastName, UserStatus status,
+                             String order, String sort, Integer page, Integer size, Pageable pageable) {
+        pageable = PageRequest.of(page, size, Sort.by(order).ascending());
+        if (sort.equalsIgnoreCase("desc")) {
+            pageable = PageRequest.of(page, size, Sort.by(order).descending());
+        }
+        return userRepository.findAllByEmailContainsAndFirstnameContainsAndLastnameContainsAndStatus(email,
+                firstName, lastName, status, pageable).getContent();
     }
 
 }
