@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -37,6 +38,7 @@ public class Event {
     private LocalDate date;
 
     @NotNull(message = "O campo 'quantidade' é obrigatório")
+    @Min(value = 1, message = "O campo 'quantidade' não pode ser inferior à 1")
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

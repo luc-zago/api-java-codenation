@@ -1,6 +1,7 @@
 package com.codenation.models;
 
 import com.codenation.enums.Authority;
+import com.codenation.enums.UserStatus;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,5 +42,8 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
 }
