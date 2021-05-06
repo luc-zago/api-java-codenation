@@ -46,8 +46,8 @@ public class Authorization extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
-        int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 20;
-        int REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60;
+        int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 60;
+        int REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 90;
 
         clients.inMemory()
                 .withClient(CLIENT_ID)
