@@ -10,6 +10,7 @@ import com.codenation.repositories.EventRepository;
 import com.codenation.repositories.LevelRepository;
 import com.codenation.repositories.UserRepository;
 import com.codenation.utils.SearchCriteria;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,30 +28,20 @@ public class EventServiceImpl implements EventService {
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final LevelRepository levelRepository;
+    private final LoggedUser loggedUser;
 
     @Autowired
     public EventServiceImpl(EventRepository eventRepository, UserRepository userRepository,
-                            LevelRepository levelRepository) {
+                            LevelRepository levelRepository, LoggedUser loggedUser) {
         this.eventRepository = eventRepository;
         this.userRepository = userRepository;
         this.levelRepository = levelRepository;
-    }
-
-    private String getLoggedUserEmail() {
-        String email;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails)principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-        return email;
+        this.loggedUser = loggedUser;
     }
 
     public Event register(Event event) throws InstanceAlreadyExistsException {
         Long levelId = event.getLevel().getId();
-        User user = userRepository.findByEmailAndStatus(getLoggedUserEmail(), UserStatus.ACTIVE)
+        User user = userRepository.findByEmailAndStatus(loggedUser.get().getEmail(), UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         Level level = levelRepository.findById(levelId)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
@@ -78,7 +69,7 @@ public class EventServiceImpl implements EventService {
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
         Level level = levelRepository.findById(event.getLevel().getId())
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        String email = getLoggedUserEmail();
+        String email = loggedUser.get().getEmail();
         if (!oldEvent.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
@@ -92,7 +83,7 @@ public class EventServiceImpl implements EventService {
     public void deleteById(Long id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Evento não encontrado"));
-        String email = getLoggedUserEmail();
+        String email = loggedUser.get().getEmail();
         if (!event.getUser().getEmail().equals(email) && !email.equals("admin@admin.com")) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
