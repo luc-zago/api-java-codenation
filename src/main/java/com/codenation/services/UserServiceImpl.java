@@ -24,26 +24,16 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final LoggedUser loggedUser;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, LoggedUser loggedUser) {
         this.userRepository = userRepository;
+        this.loggedUser = loggedUser;
     }
 
     private PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    private String getLoggedUserEmail() {
-        String email;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (principal instanceof UserDetails) {
-            email = ((UserDetails)principal).getUsername();
-        } else {
-            email = principal.toString();
-        }
-        return email;
     }
 
     @Override
@@ -62,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User update(User user) {
-        String email = getLoggedUserEmail();
+        String email = loggedUser.get().getEmail();
         User oldUser = userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
         if (!email.equals(user.getEmail())) {
@@ -90,9 +80,9 @@ public class UserServiceImpl implements UserService {
     public User changeAuthority(Long id, Authority authority) {
         User user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        User loggedUser = userRepository.findByEmailAndStatus(getLoggedUserEmail(), UserStatus.ACTIVE)
+        User userLogged = userRepository.findByEmailAndStatus(loggedUser.get().getEmail(), UserStatus.ACTIVE)
                 .orElse(null);
-        if (!Objects.requireNonNull(loggedUser).getAuthority().equals(Authority.ADMIN)) {
+        if (!Objects.requireNonNull(userLogged).getAuthority().equals(Authority.ADMIN)) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
         user.setAuthority(authority);
@@ -102,10 +92,10 @@ public class UserServiceImpl implements UserService {
     public void inactiveById(Long id) {
         User user = userRepository.findByIdAndStatus(id, UserStatus.ACTIVE)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
-        User loggedUser = userRepository.findByEmailAndStatus(getLoggedUserEmail(), UserStatus.ACTIVE)
+        User userLogged = userRepository.findByEmailAndStatus(loggedUser.get().getEmail(), UserStatus.ACTIVE)
                 .orElse(null);
-        if (!user.getEmail().equals(getLoggedUserEmail())
-                && !Objects.requireNonNull(loggedUser).getAuthority().equals(Authority.ADMIN)) {
+        if (!user.getEmail().equals(loggedUser.get().getEmail())
+                && !Objects.requireNonNull(userLogged).getAuthority().equals(Authority.ADMIN)) {
             throw new IllegalArgumentException("Usuário não autorizado");
         }
         user.setStatus(UserStatus.INACTIVE);
