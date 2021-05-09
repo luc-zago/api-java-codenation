@@ -33,8 +33,8 @@ public class LevelServiceImpl implements LevelService {
     public Level update(Level level, Long id) throws InstanceAlreadyExistsException {
         Level oldLevel = levelRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
-        levelRepository.findByDescription(level.getDescription())
-                .orElseThrow(() -> new InstanceAlreadyExistsException("Já existe um level com essa descrição"));
+        Level levelWithDescriptionExists = levelRepository.findByDescription(level.getDescription()).orElse(null);
+        if (levelWithDescriptionExists != null) throw new InstanceAlreadyExistsException("Já existe um level com essa descrição");
         oldLevel.setDescription(level.getDescription());
         return levelRepository.save(oldLevel);
     }
