@@ -43,7 +43,7 @@ public class LevelController {
     @ApiOperation(value = "Atualiza um level com base no 'id' passado pela url")
     public ResponseEntity<Level> updateById(
             @PathVariable("id") Long id,
-            @RequestBody @Valid Level level) {
+            @RequestBody @Valid Level level) throws InstanceAlreadyExistsException {
         Level updatedLevel = levelService.update(level, id);
         return ResponseEntity.status(HttpStatus.OK).body(updatedLevel);
     }

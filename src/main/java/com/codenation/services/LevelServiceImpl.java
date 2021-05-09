@@ -30,9 +30,11 @@ public class LevelServiceImpl implements LevelService {
         }    }
 
     @Override
-    public Level update(Level level, Long id) {
+    public Level update(Level level, Long id) throws InstanceAlreadyExistsException {
         Level oldLevel = levelRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Level não encontrado"));
+        levelRepository.findByDescription(level.getDescription())
+                .orElseThrow(() -> new InstanceAlreadyExistsException("Já existe um level com essa descrição"));
         oldLevel.setDescription(level.getDescription());
         return levelRepository.save(oldLevel);
     }
