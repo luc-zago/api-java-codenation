@@ -1,6 +1,5 @@
 package com.codenation.services;
 
-import com.codenation.models.Event;
 import com.codenation.models.Level;
 
 import javax.management.InstanceAlreadyExistsException;
